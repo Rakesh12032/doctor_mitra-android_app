@@ -59,7 +59,7 @@ Supabase mode stores Patient, Doctor and Admin shared state in Postgres table `d
 For admin login, create an auth user in Supabase Dashboard -> Authentication -> Users:
 
 - Email: `admin@doctormitra.in`
-- Password: `admin123`
+- Password: `rakesh@12032`
 - Auto Confirm User: ON
 
 Then run:
@@ -74,7 +74,7 @@ Demo credentials:
 
 - Patient OTP: `123456`
 - Doctor: `rajeev@doctormitra.in` / `doctor123`
-- Admin: `admin@doctormitra.in` / `admin123`
+- Admin: `admin@doctormitra.in` / `rakesh@12032`
 
 ## Getting Started
 

@@ -1,6 +1,7 @@
 {
   "currentUserId": null,
   "maintenanceMode": false,
+  "updatedAt": "2026-05-19T06:13:39.572Z",
   "users": [
     {
       "id": "admin-1",
@@ -8,9 +9,9 @@
       "name": "Doctor Mitra Admin",
       "mobile": "",
       "email": "admin@doctormitra.in",
-      "password": "admin123",
+      "password": "rakesh@12032",
       "district": "Patna",
-      "createdAt": "2026-05-18T19:12:38.670Z"
+      "createdAt": "2026-05-19T06:13:39.572Z"
     },
     {
       "id": "patient-1",
@@ -19,7 +20,7 @@
       "mobile": "9876543210",
       "email": "",
       "district": "Patna",
-      "createdAt": "2026-05-18T19:12:38.711Z"
+      "createdAt": "2026-05-19T06:13:39.572Z"
     },
     {
       "id": "doctor-user-1",
@@ -29,7 +30,37 @@
       "email": "rajeev@doctormitra.in",
       "password": "doctor123",
       "district": "Patna",
-      "createdAt": "2026-05-18T19:12:38.711Z"
+      "createdAt": "2026-05-19T06:13:39.572Z"
+    },
+    {
+      "id": "doctor-user-2",
+      "role": "doctor",
+      "name": "Dr. Anjali Singh",
+      "mobile": "9000000002",
+      "email": "anjali@doctormitra.in",
+      "password": "doctor123",
+      "district": "Patna",
+      "createdAt": "2026-05-19T06:13:39.572Z"
+    },
+    {
+      "id": "doctor-user-3",
+      "role": "doctor",
+      "name": "Dr. Vikash Jha",
+      "mobile": "9000000003",
+      "email": "vikash@doctormitra.in",
+      "password": "doctor123",
+      "district": "Patna",
+      "createdAt": "2026-05-19T06:13:39.572Z"
+    },
+    {
+      "id": "doctor-user-4",
+      "role": "doctor",
+      "name": "Dr. Meena Kumari",
+      "mobile": "9000000004",
+      "email": "meena@doctormitra.in",
+      "password": "doctor123",
+      "district": "Bhagalpur",
+      "createdAt": "2026-05-19T06:13:39.572Z"
     }
   ],
   "doctors": [
@@ -58,6 +89,79 @@
         "17:00",
         "17:30"
       ]
+    },
+    {
+      "id": "doctor-2",
+      "userId": "doctor-user-2",
+      "name": "Dr. Anjali Singh",
+      "specialty": "Gynecologist",
+      "degree": "MBBS, MS (Obs & Gyn)",
+      "experience": 12,
+      "registrationNumber": "BRMC-11782",
+      "clinicName": "Women Care",
+      "address": "Kankarbagh, Patna",
+      "district": "Patna",
+      "fee": 600,
+      "onlineFee": 400,
+      "rating": 4.8,
+      "reviews": 421,
+      "status": "approved",
+      "isOnlineAvailable": true,
+      "slots": [
+        "10:00",
+        "10:30",
+        "11:00",
+        "16:00",
+        "16:30"
+      ]
+    },
+    {
+      "id": "doctor-3",
+      "userId": "doctor-user-3",
+      "name": "Dr. Vikash Jha",
+      "specialty": "Cardiologist",
+      "degree": "MBBS, MD, DM (Cardiology)",
+      "experience": 20,
+      "registrationNumber": "BRMC-12690",
+      "clinicName": "Heart Hospital",
+      "address": "Rajendra Nagar, Patna",
+      "district": "Patna",
+      "fee": 800,
+      "onlineFee": 600,
+      "rating": 4.9,
+      "reviews": 512,
+      "status": "approved",
+      "isOnlineAvailable": false,
+      "slots": [
+        "11:00",
+        "11:30",
+        "12:00",
+        "18:00"
+      ]
+    },
+    {
+      "id": "doctor-4",
+      "userId": "doctor-user-4",
+      "name": "Dr. Meena Kumari",
+      "specialty": "Gynecologist",
+      "degree": "MBBS, DGO",
+      "experience": 18,
+      "registrationNumber": "BRMC-14403",
+      "clinicName": "Mata Clinic",
+      "address": "Adampur, Bhagalpur",
+      "district": "Bhagalpur",
+      "fee": 600,
+      "onlineFee": 350,
+      "rating": 4.8,
+      "reviews": 312,
+      "status": "pending",
+      "isOnlineAvailable": true,
+      "slots": [
+        "09:00",
+        "09:30",
+        "17:00",
+        "17:30"
+      ]
     }
   ],
   "bookings": [
@@ -73,7 +177,7 @@
       "symptoms": "Fever and body pain",
       "fee": 400,
       "status": "pending",
-      "createdAt": "2026-05-18T19:12:38.711Z"
+      "createdAt": "2026-05-19T06:13:39.572Z"
     }
   ],
   "hospitals": [
@@ -84,6 +188,14 @@
       "address": "Bailey Road, Patna",
       "phone": "0612-2200001",
       "type": "Multispeciality"
+    },
+    {
+      "id": "hospital-2",
+      "name": "Aarogya Hospital",
+      "district": "Bhagalpur",
+      "address": "Tilka Manjhi, Bhagalpur",
+      "phone": "0641-2300002",
+      "type": "General"
     }
   ],
   "ambulances": [
@@ -92,6 +204,13 @@
       "name": "Bihar Emergency 102",
       "district": "All Bihar",
       "phone": "102",
+      "isAvailable": true
+    },
+    {
+      "id": "amb-2",
+      "name": "Patna Rapid Ambulance",
+      "district": "Patna",
+      "phone": "9800000102",
       "isAvailable": true
     }
   ],

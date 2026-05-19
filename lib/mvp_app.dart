@@ -743,7 +743,7 @@ class DoctorMitraStore extends ChangeNotifier {
         name: 'Doctor Mitra Admin',
         mobile: '',
         email: 'admin@doctormitra.in',
-        password: 'admin123',
+        password: 'rakesh@12032',
         district: 'Patna',
         createdAt: now,
       ),
@@ -1812,7 +1812,7 @@ class RoleSelectionScreen extends StatelessWidget {
             const SizedBox(height: 18),
             const InfoStrip(
               icon: Icons.lock,
-              text: 'Demo OTP: 123456  •  Admin: admin@doctormitra.in / admin123',
+              text: 'Demo OTP: 123456  •  Admin: admin@doctormitra.in / rakesh@12032',
             ),
           ],
         ),
@@ -2004,7 +2004,7 @@ class AdminLoginScreen extends StatefulWidget {
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final email = TextEditingController(text: 'admin@doctormitra.in');
-  final password = TextEditingController(text: 'admin123');
+  final password = TextEditingController(text: 'rakesh@12032');
   String? error;
 
   @override
