@@ -34,7 +34,7 @@ Supabase Dashboard -> Authentication -> Users -> Add user:
 
 ```text
 Email: admin@doctormitra.in
-Password: rakesh@12032
+Password: Rakesh@12032
 Auto Confirm User: ON
 ```
 

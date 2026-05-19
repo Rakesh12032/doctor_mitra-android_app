@@ -31,7 +31,7 @@ function seedState() {
         name: "Doctor Mitra Admin",
         mobile: "",
         email: "admin@doctormitra.in",
-        password: "rakesh@12032",
+        password: "Rakesh@12032",
         district: "Patna",
         createdAt
       },
