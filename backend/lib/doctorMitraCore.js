@@ -603,9 +603,23 @@ function applyAction(inputState, action) {
       break;
     }
 
+    case "admin.deleteSpecialty": {
+      const specialty = cleanText(payload.specialty);
+      state.specialties = state.specialties.filter((s) => s !== specialty);
+      result = { specialties: state.specialties };
+      break;
+    }
+
     case "admin.addHealthTip": {
       const tip = cleanText(payload.tip);
       if (tip) state.healthTips.unshift(tip);
+      result = { healthTips: state.healthTips };
+      break;
+    }
+
+    case "admin.deleteHealthTip": {
+      const tip = cleanText(payload.tip);
+      state.healthTips = state.healthTips.filter((t) => t !== tip);
       result = { healthTips: state.healthTips };
       break;
     }
@@ -635,6 +649,28 @@ function applyAction(inputState, action) {
 
     case "hospital.delete": {
       state.hospitals = state.hospitals.filter((hospital) => hospital.id !== payload.id);
+      result = { id: payload.id };
+      break;
+    }
+
+    case "ambulance.add": {
+      const ambulance = {
+        id: payload.id || id("amb"),
+        name: cleanText(payload.name),
+        district: cleanText(payload.district) || "Patna",
+        phone: cleanText(payload.phone),
+        isAvailable: payload.isAvailable !== false
+      };
+      if (!ambulance.name || !ambulance.phone) throw httpError(400, "Ambulance name and phone are required");
+      const index = state.ambulances.findIndex((item) => item.id === ambulance.id);
+      if (index === -1) state.ambulances.unshift(ambulance);
+      else state.ambulances[index] = ambulance;
+      result = { ambulance };
+      break;
+    }
+
+    case "ambulance.delete": {
+      state.ambulances = state.ambulances.filter((amb) => amb.id !== payload.id);
       result = { id: payload.id };
       break;
     }

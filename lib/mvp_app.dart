@@ -458,6 +458,7 @@ class LocalStorageLayer {
 
 class InternetApiLayer {
   static const String baseUrl = String.fromEnvironment('DOCTOR_MITRA_API_URL');
+  static bool get isConfiguredStatic => baseUrl.trim().isNotEmpty;
   bool get isConfigured => baseUrl.trim().isNotEmpty;
 
   Uri _uri(String path) => Uri.parse('${baseUrl.replaceAll(RegExp(r'/+$'), '')}$path');
@@ -523,13 +524,130 @@ class InternetApiLayer {
   }
 }
 
+class SupabaseApiLayer {
+  static const String projectUrl = String.fromEnvironment('SUPABASE_URL');
+  static const String anonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+  static const String _stateId = 'singleton';
+
+  static bool get isConfiguredStatic =>
+      projectUrl.trim().isNotEmpty && anonKey.trim().isNotEmpty;
+  bool get isConfigured => isConfiguredStatic;
+
+  Uri _uri(String path, [Map<String, String>? query]) {
+    final base = projectUrl.replaceAll(RegExp(r'/+$'), '');
+    return Uri.parse('$base$path').replace(queryParameters: query);
+  }
+
+  Map<String, String> get _headers => {
+        'apikey': anonKey,
+        'Authorization': 'Bearer $anonKey',
+        'Content-Type': 'application/json',
+      };
+
+  Future<Map<String, dynamic>?> readState() async {
+    if (!isConfigured) return null;
+    try {
+      final response = await http
+          .get(
+            _uri('/rest/v1/doctor_mitra_state', {
+              'id': 'eq.$_stateId',
+              'select': 'state',
+              'limit': '1',
+            }),
+            headers: _headers,
+          )
+          .timeout(const Duration(seconds: 10));
+      if (response.statusCode < 200 || response.statusCode >= 300) return null;
+      final rows = jsonDecode(response.body) as List<dynamic>;
+      if (rows.isEmpty) return null;
+      final state = (rows.first as Map<String, dynamic>)['state'];
+      if (state is! Map<String, dynamic> || state['users'] is! List) return null;
+      return state;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<bool> writeState(Map<String, dynamic> value) async {
+    if (!isConfigured) return false;
+    try {
+      final response = await http
+          .post(
+            _uri('/rest/v1/doctor_mitra_state', {'on_conflict': 'id'}),
+            headers: {
+              ..._headers,
+              'Prefer': 'resolution=merge-duplicates,return=minimal',
+            },
+            body: jsonEncode({
+              'id': _stateId,
+              'state': value,
+              'updated_at': DateTime.now().toIso8601String(),
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> health() async {
+    if (!isConfigured) return false;
+    try {
+      final response = await http
+          .get(
+            _uri('/rest/v1/doctor_mitra_state', {
+              'select': 'id',
+              'limit': '1',
+            }),
+            headers: _headers,
+          )
+          .timeout(const Duration(seconds: 6));
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (_) {
+      return false;
+    }
+  }
+}
+
+class CloudApiLayer {
+  final SupabaseApiLayer _supabase = SupabaseApiLayer();
+  final InternetApiLayer _internet = InternetApiLayer();
+
+  static bool get isConfigured =>
+      SupabaseApiLayer.isConfiguredStatic || InternetApiLayer.isConfiguredStatic;
+
+  bool get isSupabase => _supabase.isConfigured;
+  bool get isInternetActionApi => _internet.isConfigured;
+  bool get isConfiguredInstance => _supabase.isConfigured || _internet.isConfigured;
+
+  String get syncLabel => isSupabase ? 'Supabase sync' : 'Internet sync';
+
+  String get endpointLabel {
+    if (isSupabase) return 'Supabase: ${SupabaseApiLayer.projectUrl}';
+    if (_internet.isConfigured) return 'API: ${InternetApiLayer.baseUrl}';
+    return 'No cloud configured. Use SUPABASE_URL + SUPABASE_ANON_KEY, or DOCTOR_MITRA_API_URL.';
+  }
+
+  Future<Map<String, dynamic>?> readState() =>
+      isSupabase ? _supabase.readState() : _internet.readState();
+
+  Future<bool> writeState(Map<String, dynamic> value) =>
+      isSupabase ? _supabase.writeState(value) : _internet.writeState(value);
+
+  Future<bool> health() => isSupabase ? _supabase.health() : _internet.health();
+
+  Future<Map<String, dynamic>?> runAction(String type, Map<String, dynamic> payload) =>
+      _internet.runAction(type, payload);
+}
+
 class DoctorMitraStore extends ChangeNotifier {
   final LocalStorageLayer _storage = LocalStorageLayer();
-  final InternetApiLayer _api = InternetApiLayer();
+  final CloudApiLayer _api = CloudApiLayer();
 
   bool isLoading = true;
   bool isInternetConnected = false;
-  String syncMode = InternetApiLayer.baseUrl.trim().isEmpty ? 'Local demo' : 'Connecting...';
+  String syncMode = CloudApiLayer.isConfigured ? 'Connecting...' : 'Local demo';
   AppUser? currentUser;
   List<AppUser> users = [];
   List<Doctor> doctors = [];
@@ -581,11 +699,11 @@ class DoctorMitraStore extends ChangeNotifier {
         currentUser = users.where((user) => user.id == localCurrentUserId).firstOrNull;
       }
       isInternetConnected = true;
-      syncMode = 'Internet sync';
+      syncMode = _api.syncLabel;
       await _saveLocalOnly();
     } else {
       isInternetConnected = false;
-      syncMode = _api.isConfigured ? 'Offline fallback' : 'Local demo';
+      syncMode = _api.isConfiguredInstance ? 'Offline fallback' : 'Local demo';
     }
     isLoading = false;
     notifyListeners();
@@ -859,9 +977,9 @@ class DoctorMitraStore extends ChangeNotifier {
     final state = _toJson();
     await _storage.write(state);
     final synced = await _api.writeState(_toJson(includeSession: false));
-    if (_api.isConfigured) {
+    if (_api.isConfiguredInstance) {
       isInternetConnected = synced;
-      syncMode = synced ? 'Internet sync' : 'Offline fallback';
+      syncMode = synced ? _api.syncLabel : 'Offline fallback';
     }
   }
 
@@ -874,12 +992,12 @@ class DoctorMitraStore extends ChangeNotifier {
         currentUser = users.where((user) => user.id == localCurrentUserId).firstOrNull;
       }
       isInternetConnected = true;
-      syncMode = 'Internet sync';
+      syncMode = _api.syncLabel;
       await _saveLocalOnly();
     } else {
       final synced = await _api.writeState(_toJson(includeSession: false));
       isInternetConnected = synced;
-      syncMode = _api.isConfigured ? (synced ? 'Internet sync' : 'Offline fallback') : 'Local demo';
+      syncMode = _api.isConfiguredInstance ? (synced ? _api.syncLabel : 'Offline fallback') : 'Local demo';
     }
     notifyListeners();
   }
@@ -889,7 +1007,7 @@ class DoctorMitraStore extends ChangeNotifier {
     Map<String, dynamic> payload, {
     bool updateCurrentUser = false,
   }) async {
-    if (!_api.isConfigured) return 'API not configured';
+    if (!_api.isInternetActionApi) return 'API not configured';
     final response = await _api.runAction(type, payload);
     if (response == null) {
       isInternetConnected = false;
@@ -911,7 +1029,7 @@ class DoctorMitraStore extends ChangeNotifier {
       currentUser = users.where((user) => user.id == nextUserId).firstOrNull;
     }
     isInternetConnected = true;
-    syncMode = 'Internet sync';
+    syncMode = _api.syncLabel;
     await _saveLocalOnly();
     notifyListeners();
     return null;
@@ -1480,7 +1598,33 @@ class HospitalService {
 class AmbulanceService {
   Future<void> callProvider(AmbulanceProviderModel provider) async {
     final uri = Uri.parse('tel:${provider.phone}');
-    await launchUrl(uri);
+    if (!await launchUrl(uri)) {
+      debugPrint('Could not launch dialer');
+    }
+  }
+
+  Future<void> addAmbulance(DoctorMitraStore store, AmbulanceProviderModel ambulance) async {
+    if (store.isInternetConnected) {
+      final error = await store.runRemoteAction('ambulance.add', ambulance.toJson());
+      if (error != null) return;
+    } else {
+      final index = store.ambulances.indexWhere((item) => item.id == ambulance.id);
+      if (index == -1) {
+        store.ambulances.insert(0, ambulance);
+      } else {
+        store.ambulances[index] = ambulance;
+      }
+      await store.persist();
+    }
+  }
+
+  Future<void> deleteAmbulance(DoctorMitraStore store, String id) async {
+    if (store.isInternetConnected) {
+      final error = await store.runRemoteAction('ambulance.delete', {'id': id});
+      if (error != null) return;
+    }
+    store.ambulances.removeWhere((ambulance) => ambulance.id == id);
+    await store.persist();
   }
 }
 
@@ -4084,17 +4228,15 @@ void showSyncSheet(BuildContext context) {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Internet sync', style: sectionStyle),
+          Text('Cloud sync', style: sectionStyle),
           const SizedBox(height: 12),
           InfoStrip(
             icon: store.isInternetConnected ? Icons.cloud_done : Icons.cloud_off,
             text: 'Mode: ${store.syncMode}',
           ),
-          const InfoStrip(
+          InfoStrip(
             icon: Icons.api,
-            text: InternetApiLayer.baseUrl == ''
-                ? 'No API URL configured. Build with --dart-define=DOCTOR_MITRA_API_URL=https://your-api.com'
-                : 'API: ${InternetApiLayer.baseUrl}',
+            text: store._api.endpointLabel,
           ),
           PrimaryAction(
             label: 'Sync now',

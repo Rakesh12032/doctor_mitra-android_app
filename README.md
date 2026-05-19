@@ -25,6 +25,28 @@ flutter build apk --release --dart-define=DOCTOR_MITRA_API_URL=https://your-api-
 
 If `DOCTOR_MITRA_API_URL` is not provided, the app runs with local storage fallback.
 
+## Supabase Backend
+
+Run the SQL in `supabase/doctor_mitra_state.sql` from Supabase Dashboard -> SQL Editor.
+
+Then run the app with your Supabase project URL and anon public key:
+
+```bash
+flutter run -d chrome ^
+  --dart-define=SUPABASE_URL=https://rcvdwygizotxvxgkbxhk.supabase.co ^
+  --dart-define=SUPABASE_ANON_KEY=your-anon-public-key
+```
+
+Build APK with Supabase:
+
+```bash
+flutter build apk --release ^
+  --dart-define=SUPABASE_URL=https://rcvdwygizotxvxgkbxhk.supabase.co ^
+  --dart-define=SUPABASE_ANON_KEY=your-anon-public-key
+```
+
+Supabase mode stores Patient, Doctor and Admin shared state in Postgres table `doctor_mitra_state`.
+
 Demo credentials:
 
 - Patient OTP: `123456`
