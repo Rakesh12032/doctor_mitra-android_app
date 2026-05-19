@@ -27,7 +27,16 @@ If `DOCTOR_MITRA_API_URL` is not provided, the app runs with local storage fallb
 
 ## Supabase Backend
 
-Run the SQL in `supabase/doctor_mitra_state.sql` from Supabase Dashboard -> SQL Editor.
+Run the SQL in `supabase/doctor_mitra_full_setup.sql` from Supabase Dashboard -> SQL Editor.
+
+This sets up:
+
+- Supabase Auth profile table
+- Patient, Doctor and Admin roles
+- Doctors, bookings, hospitals, ambulances, health cards, notifications and prescriptions tables
+- Row Level Security policies
+- Demo data
+- `doctor_mitra_state` bridge table for the current Flutter MVP
 
 Then run the app with your Supabase project URL and anon public key:
 
@@ -46,6 +55,20 @@ flutter build apk --release ^
 ```
 
 Supabase mode stores Patient, Doctor and Admin shared state in Postgres table `doctor_mitra_state`.
+
+For admin login, create an auth user in Supabase Dashboard -> Authentication -> Users:
+
+- Email: `admin@doctormitra.in`
+- Password: `admin123`
+- Auto Confirm User: ON
+
+Then run:
+
+```sql
+update public.profiles
+set role = 'admin', name = 'Doctor Mitra Admin', district = 'Patna'
+where email = 'admin@doctormitra.in';
+```
 
 Demo credentials:
 

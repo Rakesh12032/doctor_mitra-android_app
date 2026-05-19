@@ -1,5 +1,6 @@
--- Doctor Mitra MVP Supabase backend.
--- Run this once in Supabase Dashboard -> SQL Editor.
+-- Doctor Mitra MVP Supabase backend bridge.
+-- Prefer running supabase/doctor_mitra_full_setup.sql for database + auth + RLS.
+-- Run this smaller file only if you want the JSON-state bridge table.
 --
 -- This creates one shared JSON state row for the current Flutter MVP.
 -- It keeps Patient, Doctor and Admin panels connected through Supabase Postgres.
