@@ -5,7 +5,8 @@
   "description": "Doctor Mitra shared REST API for patient, doctor and admin panels",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node tests/flow.test.js"
   },
   "dependencies": {
     "@upstash/redis": "^1.35.3"

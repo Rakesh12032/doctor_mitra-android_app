@@ -489,6 +489,29 @@ class InternetApiLayer {
     }
   }
 
+  Future<Map<String, dynamic>?> runAction(
+    String type,
+    Map<String, dynamic> payload,
+  ) async {
+    if (!isConfigured) return null;
+    try {
+      final response = await http
+          .post(
+            _uri('/api/actions'),
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode({'type': type, 'payload': payload}),
+          )
+          .timeout(const Duration(seconds: 10));
+      final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return {'ok': false, 'error': decoded['error'] ?? 'Server error'};
+      }
+      return decoded;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<bool> health() async {
     if (!isConfigured) return false;
     try {
@@ -811,26 +834,31 @@ class DoctorMitraStore extends ChangeNotifier {
     ];
   }
 
-  Map<String, dynamic> _toJson() => {
-        'currentUserId': currentUser?.id,
-        'users': users.map((e) => e.toJson()).toList(),
-        'doctors': doctors.map((e) => e.toJson()).toList(),
-        'bookings': bookings.map((e) => e.toJson()).toList(),
-        'hospitals': hospitals.map((e) => e.toJson()).toList(),
-        'ambulances': ambulances.map((e) => e.toJson()).toList(),
-        'healthCards': healthCards.map((e) => e.toJson()).toList(),
-        'notifications': notifications.map((e) => e.toJson()).toList(),
-        'prescriptions': prescriptions.map((e) => e.toJson()).toList(),
-        'specialties': specialties,
-        'healthTips': healthTips,
-        'maintenanceMode': maintenanceMode,
-      };
+  Map<String, dynamic> _toJson({bool includeSession = true}) {
+    final Map<String, dynamic> state = {
+      'users': users.map((e) => e.toJson()).toList(),
+      'doctors': doctors.map((e) => e.toJson()).toList(),
+      'bookings': bookings.map((e) => e.toJson()).toList(),
+      'hospitals': hospitals.map((e) => e.toJson()).toList(),
+      'ambulances': ambulances.map((e) => e.toJson()).toList(),
+      'healthCards': healthCards.map((e) => e.toJson()).toList(),
+      'notifications': notifications.map((e) => e.toJson()).toList(),
+      'prescriptions': prescriptions.map((e) => e.toJson()).toList(),
+      'specialties': specialties,
+      'healthTips': healthTips,
+      'maintenanceMode': maintenanceMode,
+    };
+    if (includeSession) {
+      state['currentUserId'] = currentUser?.id;
+    }
+    return state;
+  }
 
   Future<void> _saveLocalOnly() => _storage.write(_toJson());
   Future<void> _save() async {
     final state = _toJson();
     await _storage.write(state);
-    final synced = await _api.writeState(state);
+    final synced = await _api.writeState(_toJson(includeSession: false));
     if (_api.isConfigured) {
       isInternetConnected = synced;
       syncMode = synced ? 'Internet sync' : 'Offline fallback';
@@ -849,11 +877,44 @@ class DoctorMitraStore extends ChangeNotifier {
       syncMode = 'Internet sync';
       await _saveLocalOnly();
     } else {
-      final synced = await _api.writeState(_toJson());
+      final synced = await _api.writeState(_toJson(includeSession: false));
       isInternetConnected = synced;
       syncMode = _api.isConfigured ? (synced ? 'Internet sync' : 'Offline fallback') : 'Local demo';
     }
     notifyListeners();
+  }
+
+  Future<String?> runRemoteAction(
+    String type,
+    Map<String, dynamic> payload, {
+    bool updateCurrentUser = false,
+  }) async {
+    if (!_api.isConfigured) return 'API not configured';
+    final response = await _api.runAction(type, payload);
+    if (response == null) {
+      isInternetConnected = false;
+      syncMode = 'Offline fallback';
+      return 'Internet API unavailable';
+    }
+    if (response['ok'] != true) {
+      isInternetConnected = false;
+      syncMode = 'Offline fallback';
+      return response['error'] as String? ?? 'Server error';
+    }
+
+    final localCurrentUserId = currentUser?.id;
+    _hydrate(response['state'] as Map<String, dynamic>);
+    final nextUserId = updateCurrentUser
+        ? response['currentUserId'] as String?
+        : localCurrentUserId;
+    if (nextUserId != null) {
+      currentUser = users.where((user) => user.id == nextUserId).firstOrNull;
+    }
+    isInternetConnected = true;
+    syncMode = 'Internet sync';
+    await _saveLocalOnly();
+    notifyListeners();
+    return null;
   }
 
   Future<void> persist() async {
@@ -896,6 +957,15 @@ class AuthService {
     required String mobile,
     required String otp,
   }) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'auth.patientOtpLogin',
+        {'mobile': mobile, 'otp': otp},
+        updateCurrentUser: true,
+      );
+      if (error == null) return null;
+      if (error != 'Internet API unavailable') return error;
+    }
     if (otp != '123456') return 'Use demo OTP 123456';
     final normalized = mobile.replaceAll(RegExp(r'\D'), '');
     if (normalized.length != 10) return 'Enter a valid 10 digit mobile number';
@@ -933,6 +1003,15 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'auth.adminLogin',
+        {'email': email, 'password': password},
+        updateCurrentUser: true,
+      );
+      if (error == null) return null;
+      if (error != 'Internet API unavailable') return error;
+    }
     final user = store.users
         .where((item) =>
             item.role == 'admin' &&
@@ -949,6 +1028,15 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'auth.doctorLogin',
+        {'email': email, 'password': password},
+        updateCurrentUser: true,
+      );
+      if (error == null) return null;
+      if (error != 'Internet API unavailable') return error;
+    }
     final user = store.users
         .where((item) =>
             item.role == 'doctor' &&
@@ -980,6 +1068,25 @@ class AuthService {
     required String district,
     required double fee,
   }) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'auth.registerDoctor',
+        {
+          'name': name,
+          'email': email,
+          'password': password,
+          'mobile': mobile,
+          'specialty': specialty,
+          'degree': degree,
+          'registrationNumber': registrationNumber,
+          'clinicName': clinicName,
+          'district': district,
+          'fee': fee,
+        },
+      );
+      if (error == null) return null;
+      if (error != 'Internet API unavailable') return error;
+    }
     if (store.users.any((user) => user.email.toLowerCase() == email.toLowerCase())) {
       return 'Email already registered';
     }
@@ -1041,6 +1148,18 @@ class PatientService {
   }) async {
     final current = store.currentUser;
     if (current == null) return;
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'patient.updateProfile',
+        {
+          'userId': current.id,
+          'name': name,
+          'mobile': mobile,
+          'district': district,
+        },
+      );
+      if (error == null) return;
+    }
     final index = store.users.indexWhere((user) => user.id == current.id);
     if (index == -1) return;
     store.users[index] = current.copyWith(name: name, mobile: mobile, district: district);
@@ -1057,6 +1176,19 @@ class PatientService {
   }) async {
     final user = store.currentUser;
     if (user == null) return;
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'patient.updateHealthCard',
+        {
+          'userId': user.id,
+          'bloodGroup': bloodGroup,
+          'allergies': allergies,
+          'medications': medications,
+          'emergencyContact': emergencyContact,
+        },
+      );
+      if (error == null) return;
+    }
     final card = HealthCard(
       id: store.currentHealthCard?.id ?? _uuid.v4(),
       userId: user.id,
@@ -1088,6 +1220,13 @@ class DoctorService {
     DoctorMitraStore store,
     Doctor doctor,
   ) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'doctor.update',
+        {'doctorId': doctor.id, ...doctor.toJson()},
+      );
+      if (error == null) return;
+    }
     final index = store.doctors.indexWhere((item) => item.id == doctor.id);
     if (index == -1) return;
     store.doctors[index] = doctor;
@@ -1101,6 +1240,18 @@ class DoctorService {
     required String medicines,
     required String advice,
   }) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'doctor.savePrescription',
+        {
+          'bookingId': booking.id,
+          'diagnosis': diagnosis,
+          'medicines': medicines,
+          'advice': advice,
+        },
+      );
+      if (error == null) return;
+    }
     store.prescriptions.add(Prescription(
       id: _uuid.v4(),
       bookingId: booking.id,
@@ -1117,22 +1268,38 @@ class DoctorService {
 
 class AdminService {
   Future<void> approveDoctor(DoctorMitraStore store, String doctorId) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.approveDoctor', {'doctorId': doctorId});
+      if (error == null) return;
+    }
     final doctor = store.doctorById(doctorId).copyWith(status: 'approved');
     await store.doctorService.updateDoctor(store, doctor);
   }
 
   Future<void> rejectDoctor(DoctorMitraStore store, String doctorId) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.rejectDoctor', {'doctorId': doctorId});
+      if (error == null) return;
+    }
     final doctor = store.doctorById(doctorId).copyWith(status: 'rejected');
     await store.doctorService.updateDoctor(store, doctor);
   }
 
   Future<void> deleteDoctor(DoctorMitraStore store, String doctorId) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.deleteDoctor', {'doctorId': doctorId});
+      if (error == null) return;
+    }
     store.doctors.removeWhere((doctor) => doctor.id == doctorId);
     store.bookings.removeWhere((booking) => booking.doctorId == doctorId);
     await store.persist();
   }
 
   Future<void> addOrUpdateDoctor(DoctorMitraStore store, Doctor doctor) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.upsertDoctor', {'doctor': doctor.toJson()});
+      if (error == null) return;
+    }
     final index = store.doctors.indexWhere((item) => item.id == doctor.id);
     if (index == -1) {
       store.doctors.add(doctor);
@@ -1143,18 +1310,30 @@ class AdminService {
   }
 
   Future<void> addSpecialty(DoctorMitraStore store, String specialty) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.addSpecialty', {'specialty': specialty});
+      if (error == null) return;
+    }
     if (specialty.trim().isEmpty || store.specialties.contains(specialty.trim())) return;
     store.specialties.add(specialty.trim());
     await store.persist();
   }
 
   Future<void> addHealthTip(DoctorMitraStore store, String tip) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.addHealthTip', {'tip': tip});
+      if (error == null) return;
+    }
     if (tip.trim().isEmpty) return;
     store.healthTips.insert(0, tip.trim());
     await store.persist();
   }
 
   Future<void> setMaintenanceMode(DoctorMitraStore store, bool value) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('admin.setMaintenanceMode', {'value': value});
+      if (error == null) return;
+    }
     store.maintenanceMode = value;
     await store.persist();
   }
@@ -1171,6 +1350,29 @@ class BookingService {
   }) async {
     final user = store.currentUser!;
     final fee = type == 'online' ? doctor.onlineFee : doctor.fee;
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'booking.create',
+        {
+          'patientId': user.id,
+          'doctorId': doctor.id,
+          'type': type,
+          'date': date,
+          'time': time,
+          'symptoms': symptoms,
+        },
+      );
+      if (error == null) {
+        return store.bookings.firstWhere(
+          (booking) =>
+              booking.patientId == user.id &&
+              booking.doctorId == doctor.id &&
+              booking.date == date &&
+              booking.time == time &&
+              booking.type == type,
+        );
+      }
+    }
     final booking = Booking(
       id: _uuid.v4(),
       patientId: user.id,
@@ -1202,6 +1404,13 @@ class BookingService {
     String bookingId,
     String status,
   ) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'booking.updateStatus',
+        {'bookingId': bookingId, 'status': status},
+      );
+      if (error == null) return;
+    }
     final index = store.bookings.indexWhere((booking) => booking.id == bookingId);
     if (index == -1) return;
     final booking = store.bookings[index].copyWith(status: status);
@@ -1219,6 +1428,13 @@ class BookingService {
 
 class SlotService {
   Future<void> addSlot(DoctorMitraStore store, Doctor doctor, String slot) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'slot.add',
+        {'doctorId': doctor.id, 'slot': slot},
+      );
+      if (error == null) return;
+    }
     if (slot.trim().isEmpty || doctor.slots.contains(slot.trim())) return;
     await store.doctorService.updateDoctor(
       store,
@@ -1227,6 +1443,13 @@ class SlotService {
   }
 
   Future<void> removeSlot(DoctorMitraStore store, Doctor doctor, String slot) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction(
+        'slot.remove',
+        {'doctorId': doctor.id, 'slot': slot},
+      );
+      if (error == null) return;
+    }
     await store.doctorService.updateDoctor(
       store,
       doctor.copyWith(slots: doctor.slots.where((item) => item != slot).toList()),
@@ -1236,11 +1459,19 @@ class SlotService {
 
 class HospitalService {
   Future<void> addHospital(DoctorMitraStore store, Hospital hospital) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('hospital.add', hospital.toJson());
+      if (error == null) return;
+    }
     store.hospitals.add(hospital);
     await store.persist();
   }
 
   Future<void> deleteHospital(DoctorMitraStore store, String id) async {
+    if (InternetApiLayer.baseUrl.trim().isNotEmpty) {
+      final error = await store.runRemoteAction('hospital.delete', {'id': id});
+      if (error == null) return;
+    }
     store.hospitals.removeWhere((hospital) => hospital.id == id);
     await store.persist();
   }
