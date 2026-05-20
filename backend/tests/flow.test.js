@@ -33,7 +33,11 @@ const registration = action("auth.registerDoctor", {
   fee: 500
 });
 const doctorId = registration.result.doctor.id;
+const doctorUserId = registration.result.doctor.userId;
 assert.strictEqual(registration.result.doctor.status, "pending");
+assert(
+  state.notifications.some((item) => item.userId === "admin-1" && item.title === "Doctor approval pending")
+);
 
 assert.throws(() => {
   applyAction(state, {
@@ -43,6 +47,9 @@ assert.throws(() => {
 }, /Registration pending admin approval/);
 
 action("admin.approveDoctor", { doctorId });
+assert(
+  state.notifications.some((item) => item.userId === doctorUserId && item.title === "Registration approved")
+);
 
 const doctorLogin = action("auth.doctorLogin", {
   email: "backendtest@doctormitra.in",
@@ -61,8 +68,20 @@ const booking = action("booking.create", {
 assert.strictEqual(booking.result.booking.status, "pending");
 
 const bookingId = booking.result.booking.id;
+assert(
+  state.notifications.some((item) => item.userId === doctorUserId && item.title === "New appointment")
+);
+assert(
+  state.notifications.some((item) => item.userId === "admin-1" && item.title === "New booking")
+);
 action("booking.updateStatus", { bookingId, status: "accepted" });
 assert.strictEqual(state.bookings.find((item) => item.id === bookingId).status, "accepted");
+assert(
+  state.notifications.some((item) => item.userId === "patient-1" && item.title === "Booking ACCEPTED")
+);
+assert(
+  state.notifications.some((item) => item.userId === doctorUserId && item.title === "Booking ACCEPTED")
+);
 
 action("booking.updateStatus", { bookingId, status: "cancelled" });
 assert.strictEqual(state.bookings.find((item) => item.id === bookingId).status, "cancelled");
