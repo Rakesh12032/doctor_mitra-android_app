@@ -15,8 +15,12 @@ class WhatsappFab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: _launchWhatsapp,
-      backgroundColor: Colors.green,
-      child: const Icon(Icons.chat, color: Colors.white),
+      backgroundColor: const Color(0xFF25D366),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
     );
   }
 }

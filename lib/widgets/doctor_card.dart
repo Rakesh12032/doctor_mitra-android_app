@@ -17,16 +17,17 @@ class DoctorCard extends StatelessWidget {
     final isHi = lang.isHindi;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black.withOpacity(0.015)),
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Color(0x14000000), // shadow: 0px 2px 12px rgba(0,0,0,0.08)
             blurRadius: 12,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 2),
+            spreadRadius: 0,
           )
         ],
       ),
@@ -41,7 +42,7 @@ class DoctorCard extends StatelessWidget {
               ),
             );
           },
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -52,14 +53,18 @@ class DoctorCard extends StatelessWidget {
                   children: [
                     // Avatar
                     Container(
-                      width: 68,
-                      height: 68,
+                      width: 64,
+                      height: 64,
                       decoration: BoxDecoration(
                         color: doctor.specialtyColor.withOpacity(0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(color: doctor.specialtyColor.withOpacity(0.3), width: 2),
+                        border: Border.all(
+                            color: doctor.specialtyColor.withOpacity(0.2),
+                            width: 1.5),
                       ),
-                      child: Center(child: Icon(Icons.person, color: doctor.specialtyColor, size: 36)),
+                      child: Center(
+                          child: Icon(Icons.person,
+                              color: doctor.specialtyColor, size: 32)),
                     ),
                     const SizedBox(width: 16),
                     // Details
@@ -77,19 +82,20 @@ class DoctorCard extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
                                     color: AppColors.textDark,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
                               if (doctor.isOnline)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: AppColors.success.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: AppColors.success.withOpacity(0.3)),
+                                    color: AppColors.success.withOpacity(0.12),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -107,8 +113,9 @@ class DoctorCard extends StatelessWidget {
                                         lang.t('online'),
                                         style: const TextStyle(
                                           color: AppColors.success,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: 'Poppins',
                                         ),
                                       ),
                                     ],
@@ -125,9 +132,10 @@ class DoctorCard extends StatelessWidget {
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
+                              fontFamily: 'Poppins',
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Text(
                             isHi ? doctor.degreeHi : doctor.degreeEn,
                             maxLines: 1,
@@ -135,16 +143,24 @@ class DoctorCard extends StatelessWidget {
                             style: const TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 13,
+                              fontFamily: 'Poppins',
                             ),
                           ),
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Icon(Icons.work_outline, size: 14, color: AppColors.textMedium),
+                              const Icon(Icons.work_outline,
+                                  size: 14, color: AppColors.textMuted),
                               const SizedBox(width: 4),
                               Text(
-                                isHi ? '${doctor.experience} वर्ष अनुभव' : '${doctor.experience} Yrs Exp.',
-                                style: const TextStyle(color: AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w500),
+                                isHi
+                                    ? '${doctor.experience} वर्ष अनुभव'
+                                    : '${doctor.experience} Yrs Exp.',
+                                style: const TextStyle(
+                                    color: AppColors.textMedium,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Poppins'),
                               ),
                             ],
                           )
@@ -153,9 +169,9 @@ class DoctorCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                const Divider(color: AppColors.border, height: 1),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
+                Divider(color: AppColors.border.withOpacity(0.5), height: 1),
+                const SizedBox(height: 14),
                 // Rating and Fee
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,18 +179,24 @@ class DoctorCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.warning.withOpacity(0.15),
+                            color: AppColors.warning.withOpacity(0.12),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
+                              const Icon(Icons.star_rounded,
+                                  color: AppColors.warning, size: 16),
                               const SizedBox(width: 4),
                               Text(
                                 '${doctor.rating}',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.warning),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: AppColors.warning,
+                                    fontFamily: 'Poppins'),
                               ),
                             ],
                           ),
@@ -182,7 +204,10 @@ class DoctorCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           '(${doctor.reviews} ${isHi ? 'समीक्षाएं' : 'Reviews'})',
-                          style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                          style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 13,
+                              fontFamily: 'Poppins'),
                         ),
                       ],
                     ),
@@ -192,47 +217,90 @@ class DoctorCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                         fontSize: 18,
+                        fontFamily: 'Poppins',
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 // Buttons
                 Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DoctorProfileScreen(doctor: doctor),
+                      child: SizedBox(
+                        height: 46,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DoctorProfileScreen(doctor: doctor),
+                              ),
+                            );
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.primary,
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(
+                                color: AppColors.primary, width: 1.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(0, 44),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          child: Text(isHi ? 'प्रोफाइल' : 'View Profile',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins')),
                         ),
-                        child: Text(isHi ? 'प्रोफाइल' : 'View Profile', style: const TextStyle(fontSize: 14)),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookingScreen(doctor: doctor),
+                      child: Container(
+                        height: 46,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppColors.primary, AppColors.secondary],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withOpacity(0.15),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(0, 44),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          ],
                         ),
-                        child: Text(isHi ? 'बुक करें' : 'Book Now', style: const TextStyle(fontSize: 14)),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    BookingScreen(doctor: doctor),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Colors.white,
+                            shadowColor: Colors.transparent,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(isHi ? 'बुक करें' : 'Book Now',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white)),
+                        ),
                       ),
                     ),
                   ],

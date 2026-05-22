@@ -13,7 +13,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   String _selectedRole = 'patient';
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
@@ -22,9 +23,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
+    _animController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _animController, curve: Curves.easeOut));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
+            CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
   }
 
@@ -38,14 +43,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     final lang = Provider.of<LanguageProvider>(context);
     final isHi = lang.isHindi;
-    final theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: const [Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())],
+        actions: const [
+          Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
+        ],
       ),
       extendBodyBehindAppBar: true,
       body: SafeArea(
@@ -59,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
-                  // Premium Header
+                  // Premium Header Logo
                   Center(
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -67,44 +73,71 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         color: AppColors.cardBg,
                         shape: BoxShape.circle,
                         boxShadow: [
-                          BoxShadow(color: AppColors.primary.withOpacity(0.1), blurRadius: 20, spreadRadius: 5),
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.08),
+                            blurRadius: 24,
+                            spreadRadius: 4,
+                          ),
                         ],
                       ),
-                      child: const Icon(Icons.health_and_safety, size: 64, color: AppColors.primary),
+                      child: const Icon(Icons.health_and_safety,
+                          size: 56, color: AppColors.primary),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
                   Text(
-                    isHi ? 'डॉक्टर मित्रा में आपका स्वागत है' : 'Welcome to Doctor Mitra',
-                    style: theme.textTheme.headlineSmall?.copyWith(color: AppColors.primary),
+                    isHi
+                        ? 'डॉक्टर मित्रा में आपका स्वागत है'
+                        : 'Welcome to Doctor Mitra',
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Poppins',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    isHi ? 'बेहतर स्वास्थ्य देखभाल, अब आपके फोन पर' : 'Premium healthcare, now on your phone',
-                    style: theme.textTheme.bodyMedium,
+                    isHi
+                        ? 'बेहतर स्वास्थ्य देखभाल, अब आपके फोन पर'
+                        : 'Premium healthcare, now on your phone',
+                    style: const TextStyle(
+                      color: AppColors.textMedium,
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 36),
 
-                  // Role Selection
+                  // Role Selection Header
                   Text(
-                    isHi ? 'आगे बढ़ने के लिए चुनें' : 'Choose your role to continue',
-                    style: theme.textTheme.titleMedium?.copyWith(color: AppColors.textMedium),
+                    isHi
+                        ? 'आगे बढ़ने के लिए चुनें'
+                        : 'Choose your role to continue',
+                    style: const TextStyle(
+                      color: AppColors.textMedium,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Large Patient Card
                   _buildLargeRoleCard(
                     role: 'patient',
                     icon: Icons.person_rounded,
                     title: isHi ? 'मरीज़ (Patient)' : 'Patient',
-                    subtitle: isHi ? 'डॉक्टर बुक करें और परामर्श लें' : 'Book doctors and consult online',
+                    subtitle: isHi
+                        ? 'डॉक्टर बुक करें और परामर्श लें'
+                        : 'Book doctors and consult online',
                     isSelected: _selectedRole == 'patient',
                   ),
-                  const SizedBox(height: 16),
-                  
+                  const SizedBox(height: 12),
+
                   // Small Secondary Cards
                   Row(
                     children: [
@@ -116,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           isSelected: _selectedRole == 'doctor',
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: _buildSmallRoleCard(
                           role: 'admin',
@@ -128,40 +161,87 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ],
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
 
                   // Login Form Card
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     child: Container(
                       key: ValueKey(_selectedRole),
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(22),
                       decoration: BoxDecoration(
                         color: AppColors.cardBg,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, 8)),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x14000000),
+                            blurRadius: 16,
+                            offset: Offset(0, 4),
+                          ),
                         ],
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TextField(
-                            decoration: InputDecoration(
-                              labelText: _selectedRole == 'patient' ? lang.t('enter_phone') : (isHi ? 'लॉगिन आईडी' : 'Login ID'),
-                              prefixIcon: Icon(_selectedRole == 'patient' ? Icons.phone_outlined : Icons.badge_outlined),
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: AppColors.textDark,
                             ),
-                            keyboardType: _selectedRole == 'patient' ? TextInputType.phone : TextInputType.text,
+                            decoration: InputDecoration(
+                              labelText: _selectedRole == 'patient'
+                                  ? lang.t('enter_phone')
+                                  : (isHi ? 'लॉगिन आईडी' : 'Login ID'),
+                              labelStyle: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                color: AppColors.textMuted,
+                              ),
+                              prefixIcon: Icon(
+                                _selectedRole == 'patient'
+                                    ? Icons.phone_outlined
+                                    : Icons.badge_outlined,
+                                color: AppColors.primary,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              filled: true,
+                              fillColor: AppColors.background,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                    color: AppColors.primary, width: 1.5),
+                              ),
+                            ),
+                            keyboardType: _selectedRole == 'patient'
+                                ? TextInputType.phone
+                                : TextInputType.text,
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 20),
                           AppButton(
-                            text: _selectedRole == 'patient' ? lang.t('send_otp') : (isHi ? 'लॉगिन करें' : 'Login Now'),
+                            text: _selectedRole == 'patient'
+                                ? lang.t('send_otp')
+                                : (isHi ? 'लॉगिन करें' : 'Login Now'),
                             onPressed: () {
                               Navigator.pushReplacement(
                                 context,
                                 PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => const DashboardScreen(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    return FadeTransition(opacity: animation, child: child);
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      const DashboardScreen(),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                        opacity: animation, child: child);
                                   },
                                 ),
                               );
@@ -174,7 +254,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   const SizedBox(height: 24),
                   Text(
                     lang.t('data_safe'),
-                    style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontFamily: 'Poppins',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -197,25 +281,43 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return GestureDetector(
       onTap: () => setState(() => _selectedRole = role),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.all(20),
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.cardBg,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? AppColors.primary : AppColors.border, width: 2),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color:
+                isSelected ? AppColors.primary : Colors.black.withOpacity(0.04),
+            width: 1.5,
+          ),
           boxShadow: isSelected
-              ? [BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))]
-              : [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2))],
+              ? [
+                  BoxShadow(
+                      color: AppColors.primary.withOpacity(0.25),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4))
+                ]
+              : [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.02),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2))
+                ],
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white.withOpacity(0.2) : AppColors.primary.withOpacity(0.1),
+                color: isSelected
+                    ? Colors.white.withOpacity(0.2)
+                    : AppColors.primary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 32, color: isSelected ? Colors.white : AppColors.primary),
+              child: Icon(icon,
+                  size: 28,
+                  color: isSelected ? Colors.white : AppColors.primary),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -225,8 +327,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Poppins',
                       color: isSelected ? Colors.white : AppColors.textDark,
                     ),
                   ),
@@ -234,15 +337,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 13,
-                      color: isSelected ? Colors.white.withOpacity(0.9) : AppColors.textMedium,
+                      fontSize: 12,
+                      fontFamily: 'Poppins',
+                      color: isSelected
+                          ? Colors.white.withOpacity(0.85)
+                          : AppColors.textMedium,
                     ),
                   ),
                 ],
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle, color: Colors.white, size: 28),
+              const Icon(Icons.check_circle_rounded,
+                  color: Colors.white, size: 24),
           ],
         ),
       ),
@@ -258,27 +365,41 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return GestureDetector(
       onTap: () => setState(() => _selectedRole = role),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.1) : AppColors.cardBg,
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected
+              ? AppColors.primary.withOpacity(0.08)
+              : AppColors.cardBg,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 2 : 1,
+            color:
+                isSelected ? AppColors.primary : Colors.black.withOpacity(0.04),
+            width: isSelected ? 1.5 : 1,
           ),
+          boxShadow: isSelected
+              ? []
+              : [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.01),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1))
+                ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 24, color: isSelected ? AppColors.primary : AppColors.textMedium),
+            Icon(icon,
+                size: 20,
+                color: isSelected ? AppColors.primary : AppColors.textMedium),
             const SizedBox(width: 8),
             Text(
               title,
               style: TextStyle(
                 color: isSelected ? AppColors.primary : AppColors.textMedium,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                fontSize: 15,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                fontFamily: 'Poppins',
+                fontSize: 14,
               ),
             ),
           ],

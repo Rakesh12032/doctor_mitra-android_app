@@ -12,7 +12,8 @@ class AmbulanceScreen extends StatefulWidget {
   State<AmbulanceScreen> createState() => _AmbulanceScreenState();
 }
 
-class _AmbulanceScreenState extends State<AmbulanceScreen> with SingleTickerProviderStateMixin {
+class _AmbulanceScreenState extends State<AmbulanceScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
@@ -23,7 +24,7 @@ class _AmbulanceScreenState extends State<AmbulanceScreen> with SingleTickerProv
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    
+
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.15).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
@@ -53,7 +54,9 @@ class _AmbulanceScreenState extends State<AmbulanceScreen> with SingleTickerProv
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(lang.t('ambulance')),
-        actions: const [Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())],
+        actions: const [
+          Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
+        ],
       ),
       body: SafeArea(
         child: Center(
@@ -76,23 +79,34 @@ class _AmbulanceScreenState extends State<AmbulanceScreen> with SingleTickerProv
                         color: AppColors.error.withOpacity(0.15),
                         shape: BoxShape.circle,
                         boxShadow: [
-                          BoxShadow(color: AppColors.error.withOpacity(0.3), blurRadius: 30, spreadRadius: 10),
+                          BoxShadow(
+                              color: AppColors.error.withOpacity(0.3),
+                              blurRadius: 30,
+                              spreadRadius: 10),
                         ],
                       ),
-                      child: const Icon(Icons.emergency_rounded, size: 90, color: AppColors.error),
+                      child: const Icon(Icons.emergency_rounded,
+                          size: 90, color: AppColors.error),
                     ),
                   ),
                 ),
                 const SizedBox(height: 48),
                 Text(
                   lang.t('emergency_call'),
-                  style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.error, letterSpacing: -0.5),
+                  style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.error,
+                      letterSpacing: -0.5),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isHi ? 'एंबुलेंस के लिए 102 पर मुफ्त कॉल करें।' : 'Call 102 for a free ambulance immediately.',
-                  style: const TextStyle(fontSize: 16, color: AppColors.textMedium, height: 1.5),
+                  isHi
+                      ? 'एंबुलेंस के लिए 102 पर मुफ्त कॉल करें।'
+                      : 'Call 102 for a free ambulance immediately.',
+                  style: const TextStyle(
+                      fontSize: 16, color: AppColors.textMedium, height: 1.5),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -112,7 +126,8 @@ class _AmbulanceScreenState extends State<AmbulanceScreen> with SingleTickerProv
                 elevation: 12,
                 shadowColor: AppColors.error.withOpacity(0.5),
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
               onPressed: _callAmbulance,
               child: Row(
@@ -120,7 +135,11 @@ class _AmbulanceScreenState extends State<AmbulanceScreen> with SingleTickerProv
                 children: [
                   const Icon(Icons.phone_in_talk_rounded, size: 26),
                   const SizedBox(width: 12),
-                  Text(lang.t('call_now'), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+                  Text(lang.t('call_now'),
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5)),
                 ],
               ),
             ),

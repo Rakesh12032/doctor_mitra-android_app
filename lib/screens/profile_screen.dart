@@ -20,7 +20,9 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(lang.t('profile')),
-        actions: const [Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())],
+        actions: const [
+          Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -29,13 +31,17 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
                 decoration: BoxDecoration(
                   color: AppColors.cardBg,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(color: AppColors.border),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20, offset: const Offset(0, 8))
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8))
                   ],
                 ),
                 child: Column(
@@ -46,25 +52,36 @@ class ProfileScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.primary.withOpacity(0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 3),
+                        border: Border.all(
+                            color: AppColors.primary.withOpacity(0.2),
+                            width: 3),
                       ),
-                      child: const Icon(Icons.person, size: 50, color: AppColors.primary),
+                      child: const Icon(Icons.person,
+                          size: 50, color: AppColors.primary),
                     ),
                     const SizedBox(height: 20),
                     const Text(
                       'Rajeev Kumar',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark, letterSpacing: -0.5),
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                          letterSpacing: -0.5),
                     ),
                     const SizedBox(height: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.secondary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         lang.isHindi ? 'मरीज़' : 'Patient',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.secondary),
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.secondary),
                       ),
                     ),
                   ],
@@ -90,7 +107,10 @@ class ProfileScreen extends StatelessWidget {
                 title: lang.t('health_card'),
                 showArrow: true,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const HealthCardScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HealthCardScreen()));
                 },
               ),
               const SizedBox(height: 16),
@@ -108,7 +128,8 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
                       (route) => false,
                     );
                   },
@@ -119,7 +140,8 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: const BorderSide(color: AppColors.error, width: 1.5),
+                      side:
+                          const BorderSide(color: AppColors.error, width: 1.5),
                     ),
                   ),
                   child: Row(
@@ -127,7 +149,9 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.logout, size: 22),
                       const SizedBox(width: 8),
-                      Text(lang.t('logout'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(lang.t('logout'),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -135,7 +159,10 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 32),
               const Text(
                 'v1.0.0',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 13, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -160,7 +187,10 @@ class ProfileScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.border),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Material(
@@ -185,15 +215,23 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark)),
+                      Text(title,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: AppColors.textDark)),
                       if (subtitle != null) ...[
                         const SizedBox(height: 4),
-                        Text(subtitle, style: const TextStyle(color: AppColors.textMedium, fontSize: 14)),
+                        Text(subtitle,
+                            style: const TextStyle(
+                                color: AppColors.textMedium, fontSize: 14)),
                       ],
                     ],
                   ),
                 ),
-                if (showArrow) const Icon(Icons.chevron_right, color: AppColors.textMuted, size: 28),
+                if (showArrow)
+                  const Icon(Icons.chevron_right,
+                      color: AppColors.textMuted, size: 28),
               ],
             ),
           ),

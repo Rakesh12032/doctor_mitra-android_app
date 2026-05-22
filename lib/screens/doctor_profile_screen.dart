@@ -23,7 +23,9 @@ class DoctorProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(lang.t('view_profile')),
-        actions: const [Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())],
+        actions: const [
+          Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -31,16 +33,21 @@ class DoctorProfileScreen extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppColors.cardBg,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(32),
                     bottomRight: Radius.circular(32),
                   ),
-                  border: const Border(bottom: BorderSide(color: AppColors.border)),
+                  border:
+                      const Border(bottom: BorderSide(color: AppColors.border)),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 8)),
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.02),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8)),
                   ],
                 ),
                 child: Column(
@@ -51,38 +58,55 @@ class DoctorProfileScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: doctor.specialtyColor.withOpacity(0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(color: doctor.specialtyColor.withOpacity(0.2), width: 3),
+                        border: Border.all(
+                            color: doctor.specialtyColor.withOpacity(0.2),
+                            width: 3),
                       ),
-                      child: Icon(Icons.person, size: 54, color: doctor.specialtyColor),
+                      child: Icon(Icons.person,
+                          size: 54, color: doctor.specialtyColor),
                     ),
                     const SizedBox(height: 20),
                     Text(
                       isHi ? doctor.nameHi : doctor.nameEn,
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark, letterSpacing: -0.5),
+                      style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                          letterSpacing: -0.5),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 6),
                       decoration: BoxDecoration(
                         color: doctor.specialtyColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         isHi ? doctor.specialtyHi : doctor.specialtyEn,
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: doctor.specialtyColor),
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: doctor.specialtyColor),
                         textAlign: TextAlign.center,
                       ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       isHi ? doctor.degreeHi : doctor.degreeEn,
-                      style: const TextStyle(fontSize: 15, color: AppColors.textMedium, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 15,
+                          color: AppColors.textMedium,
+                          fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     if (doctor.isOnline)
-                      const AppBadge(text: 'Online', color: AppColors.lightBackground, textColor: AppColors.secondary),
+                      const AppBadge(
+                          text: 'Online',
+                          color: AppColors.lightBackground,
+                          textColor: AppColors.secondary),
                   ],
                 ),
               ),
@@ -93,21 +117,40 @@ class DoctorProfileScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Expanded(child: _buildInfoCard(lang.t('experience'), '${doctor.experience} Yrs', Icons.work_rounded)),
+                        Expanded(
+                            child: _buildInfoCard(
+                                lang.t('experience'),
+                                '${doctor.experience} Yrs',
+                                Icons.work_rounded)),
                         const SizedBox(width: 16),
-                        Expanded(child: _buildInfoCard(lang.t('rating'), '${doctor.rating} (${doctor.reviews})', Icons.star_rounded)),
+                        Expanded(
+                            child: _buildInfoCard(
+                                lang.t('rating'),
+                                '${doctor.rating} (${doctor.reviews})',
+                                Icons.star_rounded)),
                       ],
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        Expanded(child: _buildInfoCard(lang.t('fee'), '₹${doctor.fee}', Icons.account_balance_wallet_rounded)),
+                        Expanded(
+                            child: _buildInfoCard(
+                                lang.t('fee'),
+                                '₹${doctor.fee}',
+                                Icons.account_balance_wallet_rounded)),
                         const SizedBox(width: 16),
-                        Expanded(child: _buildInfoCard(lang.isHindi ? 'मरीज़' : 'Patients', '1k+', Icons.people_rounded)),
+                        Expanded(
+                            child: _buildInfoCard(
+                                lang.isHindi ? 'मरीज़' : 'Patients',
+                                '1k+',
+                                Icons.people_rounded)),
                       ],
                     ),
                     const SizedBox(height: 32),
-                    SectionHeader(title: lang.isHindi ? 'क्लिनिक की जानकारी' : 'Clinic Details'),
+                    SectionHeader(
+                        title: lang.isHindi
+                            ? 'क्लिनिक की जानकारी'
+                            : 'Clinic Details'),
                     const SizedBox(height: 20),
                     Container(
                       width: double.infinity,
@@ -117,7 +160,10 @@ class DoctorProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: AppColors.border),
                         boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.02),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4)),
                         ],
                       ),
                       child: Column(
@@ -127,14 +173,20 @@ class DoctorProfileScreen extends StatelessWidget {
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
-                                child: const Icon(Icons.local_hospital_rounded, color: AppColors.primary, size: 24),
+                                decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: const Icon(Icons.local_hospital_rounded,
+                                    color: AppColors.primary, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Text(
                                   isHi ? doctor.clinicHi : doctor.clinicEn,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textDark),
                                 ),
                               ),
                             ],
@@ -145,16 +197,24 @@ class DoctorProfileScreen extends StatelessWidget {
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(color: AppColors.lightBackground, borderRadius: BorderRadius.circular(10)),
-                                child: const Icon(Icons.location_on_rounded, color: AppColors.textMedium, size: 24),
+                                decoration: BoxDecoration(
+                                    color: AppColors.lightBackground,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: const Icon(Icons.location_on_rounded,
+                                    color: AppColors.textMedium, size: 24),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
                                   child: Text(
-                                    isHi ? doctor.districtHi : doctor.districtEn,
-                                    style: const TextStyle(fontSize: 15, color: AppColors.textMedium, height: 1.5),
+                                    isHi
+                                        ? doctor.districtHi
+                                        : doctor.districtEn,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        color: AppColors.textMedium,
+                                        height: 1.5),
                                   ),
                                 ),
                               ),
@@ -176,7 +236,10 @@ class DoctorProfileScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.cardBg,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, -5)),
+            BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 20,
+                offset: const Offset(0, -5)),
           ],
           border: const Border(top: BorderSide(color: AppColors.border)),
         ),
@@ -187,8 +250,10 @@ class DoctorProfileScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => BookingScreen(doctor: doctor),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      BookingScreen(doctor: doctor),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return FadeTransition(opacity: animation, child: child);
                   },
                 ),
@@ -208,7 +273,10 @@ class DoctorProfileScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.border),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -224,12 +292,18 @@ class DoctorProfileScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.textDark),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(color: AppColors.textMedium, fontSize: 13, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+                color: AppColors.textMedium,
+                fontSize: 13,
+                fontWeight: FontWeight.w500),
           ),
         ],
       ),

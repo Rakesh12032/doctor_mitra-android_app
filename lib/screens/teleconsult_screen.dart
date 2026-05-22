@@ -18,7 +18,9 @@ class TeleconsultScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(lang.t('teleconsult')),
-        actions: const [Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())],
+        actions: const [
+          Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
+        ],
       ),
       body: SafeArea(
         child: Center(
@@ -40,19 +42,25 @@ class TeleconsultScreen extends StatelessWidget {
                       color: AppColors.primary.withOpacity(0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.video_camera_front_rounded, size: 48, color: AppColors.primary),
+                    child: const Icon(Icons.video_camera_front_rounded,
+                        size: 48, color: AppColors.primary),
                   ),
                 ),
                 const SizedBox(height: 40),
                 Text(
                   lang.t('teleconsult'),
-                  style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textDark, letterSpacing: -0.5),
+                  style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark,
+                      letterSpacing: -0.5),
                 ),
                 const SizedBox(height: 16),
                 const Text(
                   'This feature is coming soon! Consult doctors from the comfort of your home.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: AppColors.textMedium, height: 1.5),
+                  style: TextStyle(
+                      fontSize: 16, color: AppColors.textMedium, height: 1.5),
                 ),
                 const SizedBox(height: 48),
                 SizedBox(

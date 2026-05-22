@@ -54,8 +54,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
               selectedItemColor: AppColors.primary,
               unselectedItemColor: AppColors.textMuted,
-              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-              unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+              selectedLabelStyle:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              unselectedLabelStyle:
+                  const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
               showUnselectedLabels: true,
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.transparent,

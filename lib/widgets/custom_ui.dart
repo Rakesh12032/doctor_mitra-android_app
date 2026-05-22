@@ -23,9 +23,10 @@ class SectionHeader extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
               color: AppColors.textDark,
+              fontFamily: 'Poppins',
             ),
           ),
           if (actionLabel != null)
@@ -39,7 +40,10 @@ class SectionHeader extends StatelessWidget {
               ),
               child: Text(
                 actionLabel!,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    fontFamily: 'Poppins'),
               ),
             ),
         ],
@@ -63,17 +67,18 @@ class AppBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(999),
+        color: color.withOpacity(0.85),
+        borderRadius: BorderRadius.circular(20), // soft pill shape
       ),
       child: Text(
         text,
         style: TextStyle(
           color: textColor,
           fontSize: 11,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.3,
         ),
       ),
     );
@@ -103,32 +108,39 @@ class EmptyState extends StatelessWidget {
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                color: AppColors.background,
+              padding: const EdgeInsets.all(28),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
+              child: Icon(icon,
+                  size: 56, color: AppColors.primary.withOpacity(0.7)),
             ),
             const SizedBox(height: 24),
             Text(
               title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.textDark),
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textDark),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
+              style: const TextStyle(
+                  fontSize: 13, color: AppColors.textMuted, height: 1.4),
               textAlign: TextAlign.center,
             ),
             if (buttonText != null && onAction != null) ...[
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: onAction,
-                child: Text(buttonText!),
+              AppButton(
+                onPressed: onAction!,
+                text: buttonText!,
+                isFullWidth: false,
               ),
             ],
           ],
@@ -156,37 +168,79 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = isPrimary
-        ? ElevatedButton.styleFrom()
-        : OutlinedButton.styleFrom();
-
-    Widget button = isPrimary
-        ? ElevatedButton(
-            onPressed: onPressed,
-            style: style,
-            child: _buildContent(),
-          )
-        : OutlinedButton(
-            onPressed: onPressed,
-            style: style,
-            child: _buildContent(),
-          );
-
-    if (isFullWidth) {
-      return SizedBox(width: double.infinity, child: button);
+    if (isPrimary) {
+      return Container(
+        height: 52, // height 52px
+        width: isFullWidth ? double.infinity : null,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              AppColors.primary,
+              AppColors.secondary
+            ], // gradient linear from #0B6E4F to #00A878
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12), // border radius 12px
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.2), // slight shadow
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+          ),
+          child: _buildContent(Colors.white),
+        ),
+      );
+    } else {
+      return SizedBox(
+        height: 52, // height 52px
+        width: isFullWidth ? double.infinity : null,
+        child: OutlinedButton(
+          onPressed: onPressed,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.primary,
+            backgroundColor: Colors.white, // white bg
+            side: const BorderSide(
+                color: AppColors.primary, width: 1.5), // green border
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12), // border radius 12px
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+          ),
+          child: _buildContent(AppColors.primary), // green text
+        ),
+      );
     }
-    return button;
   }
 
-  Widget _buildContent() {
-    if (icon == null) return Text(text);
+  Widget _buildContent(Color textColor) {
+    final textWidget = Text(
+      text,
+      style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.w700, color: textColor),
+    );
+    if (icon == null) return textWidget;
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 18),
+        Icon(icon, size: 18, color: textColor),
         const SizedBox(width: 8),
-        Text(text),
+        textWidget,
       ],
     );
   }

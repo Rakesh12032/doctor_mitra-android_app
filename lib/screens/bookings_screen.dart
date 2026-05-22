@@ -23,7 +23,10 @@ class BookingsScreen extends StatelessWidget {
           backgroundColor: AppColors.cardBg,
           elevation: 0,
           title: Text(lang.t('my_bookings')),
-          actions: const [Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())],
+          actions: const [
+            Padding(
+                padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
+          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48),
             child: Container(
@@ -35,8 +38,10 @@ class BookingsScreen extends StatelessWidget {
                 unselectedLabelColor: AppColors.textMuted,
                 indicatorColor: AppColors.primary,
                 indicatorWeight: 3,
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                labelStyle:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                unselectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
                 tabs: [
                   Tab(text: lang.t('upcoming')),
                   Tab(text: lang.t('past')),
@@ -66,34 +71,37 @@ class BookingsScreen extends StatelessWidget {
       return EmptyState(
         icon: Icons.calendar_today_outlined,
         title: lang.isHindi ? 'कोई बुकिंग नहीं मिली' : 'No bookings found',
-        subtitle: lang.isHindi ? 'आपकी अभी तक कोई बुकिंग नहीं है।' : 'You have no bookings at the moment.',
+        subtitle: lang.isHindi
+            ? 'आपकी अभी तक कोई बुकिंग नहीं है।'
+            : 'You have no bookings at the moment.',
       );
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       itemCount: bookings.length,
       itemBuilder: (context, index) {
         final booking = bookings[index];
-        final doctorName = lang.isHindi ? booking.doctorNameHi : booking.doctorNameEn;
-        final specialty = lang.isHindi ? booking.specialtyHi : booking.specialtyEn;
+        final doctorName =
+            lang.isHindi ? booking.doctorNameHi : booking.doctorNameEn;
+        final specialty =
+            lang.isHindi ? booking.specialtyHi : booking.specialtyEn;
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: AppColors.cardBg,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.border),
-            boxShadow: [
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
+                color: Color(0x14000000),
+                blurRadius: 12,
+                offset: Offset(0, 2),
               )
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -101,16 +109,18 @@ class BookingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                      width: 48,
+                      height: 48,
+                      decoration: const BoxDecoration(
+                        color: AppColors.lightBackground,
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 2),
                       ),
-                      child: const Center(child: Icon(Icons.person, color: AppColors.primary, size: 36)),
+                      child: const Center(
+                        child: Icon(Icons.person_outline,
+                            color: AppColors.primary, size: 24),
+                      ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,54 +135,77 @@ class BookingsScreen extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
                                     color: AppColors.textDark,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
                               _buildStatusChip(context, lang, booking.status),
                             ],
                           ),
-                          const SizedBox(height: 6),
-                          Text(specialty, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 14)),
+                          const SizedBox(height: 4),
+                          Text(
+                            specialty,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: AppColors.background,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     children: [
-                      _buildInfoLine(Icons.person_outline, lang.t('patient_name'), booking.patientName),
-                      const SizedBox(height: 12),
-                      _buildInfoLine(Icons.schedule, lang.t('select_slot'), '${booking.date}, ${booking.time}'),
-                      const SizedBox(height: 12),
-                      _buildInfoLine(Icons.account_balance_wallet_outlined, lang.t('fee'), '₹${booking.fee.toStringAsFixed(0)}'),
+                      _buildInfoLine(Icons.person_outline,
+                          lang.t('patient_name'), booking.patientName),
+                      const SizedBox(height: 10),
+                      _buildInfoLine(Icons.schedule, lang.t('select_slot'),
+                          '${booking.date}, ${booking.time}'),
+                      const SizedBox(height: 10),
+                      _buildInfoLine(Icons.account_balance_wallet_outlined,
+                          lang.t('fee'), '₹${booking.fee.toStringAsFixed(0)}'),
                     ],
                   ),
                 ),
                 if (booking.status == 'upcoming') ...[
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        context.read<BookingProvider>().cancelBooking(booking.id);
+                        context
+                            .read<BookingProvider>()
+                            .cancelBooking(booking.id);
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.error,
-                        side: const BorderSide(color: AppColors.error, width: 1.5),
-                        minimumSize: const Size(0, 48),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        side: const BorderSide(
+                            color: AppColors.error, width: 1.2),
+                        minimumSize: const Size(0, 42),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: Text(lang.t('cancel'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      child: Text(
+                        lang.t('cancel'),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -184,32 +217,51 @@ class BookingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(BuildContext context, LanguageProvider lang, String status) {
+  Widget _buildStatusChip(
+      BuildContext context, LanguageProvider lang, String status) {
     Color color;
     Color bgColor;
-    if (status == 'cancelled') {
-      color = AppColors.error;
-      bgColor = AppColors.error.withOpacity(0.1);
-    } else if (status == 'upcoming') {
-      color = AppColors.success;
-      bgColor = AppColors.success.withOpacity(0.1);
-    } else {
-      color = AppColors.textMuted;
-      bgColor = AppColors.lightBackground;
+
+    switch (status.toLowerCase()) {
+      case 'pending':
+        color = const Color(0xFFE65100);
+        bgColor = const Color(0xFFFFF3E0);
+        break;
+      case 'accepted':
+      case 'upcoming':
+        color = const Color(0xFF1565C0);
+        bgColor = const Color(0xFFE3F2FD);
+        break;
+      case 'completed':
+      case 'past':
+        color = const Color(0xFF2E7D32);
+        bgColor = const Color(0xFFE8F5E9);
+        break;
+      case 'cancelled':
+        color = const Color(0xFFC62828);
+        bgColor = const Color(0xFFFFEBEE);
+        break;
+      default:
+        color = AppColors.textMuted;
+        bgColor = AppColors.lightBackground;
     }
 
     final label = lang.t(status);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+          fontFamily: 'Poppins',
+        ),
       ),
     );
   }
@@ -218,15 +270,27 @@ class BookingsScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: AppColors.textMedium),
-        const SizedBox(width: 12),
-        Text(label, style: const TextStyle(color: AppColors.textMedium, fontSize: 14)),
+        Icon(icon, size: 16, color: AppColors.textMuted),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 13,
+            fontFamily: 'Poppins',
+          ),
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.textDark, fontSize: 14),
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark,
+              fontSize: 13,
+              fontFamily: 'Poppins',
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),

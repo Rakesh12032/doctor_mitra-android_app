@@ -20,7 +20,16 @@ class DoctorsData {
       rating: 4.7,
       reviews: 312,
       isOnline: true,
-      slots: ['09:00', '09:30', '10:00', '10:30', '11:00', '05:00', '05:30', '06:00'],
+      slots: [
+        '09:00',
+        '09:30',
+        '10:00',
+        '10:30',
+        '11:00',
+        '05:00',
+        '05:30',
+        '06:00'
+      ],
       specialtyColor: Colors.blue,
     ),
     Doctor(

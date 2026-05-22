@@ -2241,19 +2241,71 @@ class DoctorMitraRoleApp extends StatelessWidget {
             primary: AppColors.green,
             secondary: AppColors.mint,
             surface: Colors.white,
+            error: AppColors.red,
           ),
-          textTheme: GoogleFonts.poppinsTextTheme(),
+          textTheme: GoogleFonts.poppinsTextTheme().copyWith(
+            headlineSmall: GoogleFonts.poppins(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink),
+            titleLarge: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink),
+            titleMedium: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.ink),
+            bodyLarge: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: AppColors.muted),
+            bodyMedium: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: AppColors.ink),
+          ),
           appBarTheme: const AppBarTheme(
-            backgroundColor: AppColors.green,
-            foregroundColor: Colors.white,
+            backgroundColor: Colors.white,
+            foregroundColor: AppColors.ink,
             elevation: 0,
             centerTitle: false,
+            iconTheme: IconThemeData(color: AppColors.green, size: 24),
+            titleTextStyle: TextStyle(
+              color: AppColors.ink,
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+            ),
           ),
           cardTheme: CardTheme(
             color: Colors.white,
             elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: Colors.black.withOpacity(0.02), width: 1),
+            ),
+            margin: EdgeInsets.zero,
+            shadowColor: Colors.black.withOpacity(0.08),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: AppColors.green, width: 1.5),
+            ),
+            hintStyle: const TextStyle(color: AppColors.muted, fontSize: 13),
+            prefixIconColor: AppColors.green,
           ),
         ),
         home: const AppGate(),
@@ -2263,14 +2315,16 @@ class DoctorMitraRoleApp extends StatelessWidget {
 }
 
 class AppColors {
-  static const green = Color(0xFF087A55);
-  static const deepGreen = Color(0xFF055A42);
-  static const mint = Color(0xFFE6F7F0);
-  static const bg = Color(0xFFF4FBF7);
-  static const ink = Color(0xFF17201B);
-  static const muted = Color(0xFF6C7A73);
+  static const green = Color(0xFF0B6E4F); // deep medical green (#0B6E4F)
+  static const deepGreen = Color(0xFF054F37); // deeper medical green
+  static const mint = Color(0xFFE8F5F0); // Primary Light (#E8F5F0)
+  static const accent = Color(0xFF00A878); // Accent CTA (#00A878)
+  static const bg = Color(
+      0xFFF4F6F9); // Background (#F4F6F9 - soft grey-white, NOT mint green)
+  static const ink = Color(0xFF1A1A2E); // Text Primary (#1A1A2E)
+  static const muted = Color(0xFF6B7280); // Text Secondary (#6B7280)
   static const amber = Color(0xFFF59E0B);
-  static const red = Color(0xFFE5484D);
+  static const red = Color(0xFFEF4444);
 }
 
 extension FirstOrNullExtension<T> on Iterable<T> {
@@ -2335,33 +2389,57 @@ class BrandSplash extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.green, Color(0xFF0E9F76)],
+          colors: [AppColors.green, AppColors.accent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 44,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.health_and_safety,
-                  color: AppColors.green, size: 48),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x24000000),
+                    blurRadius: 20,
+                    offset: Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: Image.asset(
+                  'assets/logo.jpg',
+                  width: 110,
+                  height: 110,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-            SizedBox(height: 22),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Doctor Mitra',
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w800),
+                color: Colors.white,
+                fontSize: 32,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               'One connected healthcare platform',
-              style: TextStyle(color: Colors.white70, fontSize: 15),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 14,
+                fontFamily: 'Poppins',
+                letterSpacing: 0.2,
+              ),
             ),
           ],
         ),
@@ -2380,6 +2458,33 @@ class RoleSelectionScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(22),
           children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 24, top: 12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x14000000),
+                        blurRadius: 16,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      'assets/logo.jpg',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const PremiumHeader(
               title: 'Welcome to Doctor Mitra',
               subtitle: 'Choose your panel. Same app, same connected data.',
@@ -3105,23 +3210,50 @@ class PatientBookingsScreen extends StatelessWidget {
                             ? [
                                 if (booking.type == 'online' &&
                                     booking.status == 'accepted')
-                                  TextButton.icon(
+                                  FilledButton.icon(
                                     onPressed: () => push(
                                         context,
                                         OnlineConsultationScreen(
                                             booking: booking)),
                                     icon: const Icon(Icons.video_call,
-                                        color: AppColors.green),
-                                    label: const Text('Join'),
+                                        color: Colors.white, size: 16),
+                                    label: const Text('Join',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13)),
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: AppColors.green,
+                                      minimumSize: const Size(80, 36),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                    ),
                                   ),
-                                TextButton.icon(
+                                OutlinedButton.icon(
                                   onPressed: () => store.bookingService
                                       .updateStatus(
                                           store, booking.id, 'cancelled'),
                                   icon: const Icon(Icons.cancel,
-                                      color: AppColors.red),
+                                      color: AppColors.red, size: 16),
                                   label: const Text('Cancel',
-                                      style: TextStyle(color: AppColors.red)),
+                                      style: TextStyle(
+                                          color: AppColors.red,
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 13)),
+                                  style: OutlinedButton.styleFrom(
+                                    side:
+                                        const BorderSide(color: AppColors.red),
+                                    foregroundColor: AppColors.red,
+                                    minimumSize: const Size(80, 36),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                  ),
                                 ),
                               ]
                             : [],
@@ -3174,74 +3306,137 @@ class _PatientHealthCardScreenState extends State<PatientHealthCardScreen> {
       subtitle: 'Portable emergency medical profile.',
       showBack: widget.showBack,
       child: ListView(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         children: [
           Container(
-            padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                  colors: [AppColors.green, Color(0xFF10A37F)]),
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: softShadow,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('DOCTOR MITRA',
-                        style: TextStyle(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Stack(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppColors.green, AppColors.accent],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'DOCTOR MITRA',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                                letterSpacing: 2,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.verified_user,
+                                  color: Colors.white, size: 18),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+                        Text(
+                          user.name,
+                          style: const TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.5)),
-                    Icon(Icons.health_and_safety, color: Colors.white),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text(user.name,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800)),
-                Text('ID: DM-${user.id.substring(0, 6).toUpperCase()}',
-                    style: const TextStyle(color: Colors.white70)),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                        child: CardMini(
-                            label: 'Blood',
-                            value:
-                                blood.text.isEmpty ? 'Not set' : blood.text)),
-                    Expanded(
-                        child: CardMini(
-                            label: 'Emergency',
-                            value: emergency.text.isEmpty
-                                ? 'Not set'
-                                : emergency.text)),
-                  ],
-                ),
-              ],
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'ID: DM-${user.id.substring(0, 6).toUpperCase()}',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 12,
+                            letterSpacing: 1.0,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CardMini(
+                                label: 'Blood Group',
+                                value:
+                                    blood.text.isEmpty ? 'Not set' : blood.text,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: CardMini(
+                                label: 'Emergency Contact',
+                                value: emergency.text.isEmpty
+                                    ? 'Not set'
+                                    : emergency.text,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    right: -25,
+                    top: -25,
+                    child: Icon(
+                      Icons.health_and_safety,
+                      size: 160,
+                      color: Colors.white.withOpacity(0.06),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 24),
           AppField(
-              controller: blood, label: 'Blood group', icon: Icons.bloodtype),
+            controller: blood,
+            label: 'Blood group',
+            icon: Icons.bloodtype,
+          ),
+          const SizedBox(height: 16),
           AppField(
-              controller: allergies,
-              label: 'Known allergies',
-              icon: Icons.warning,
-              maxLines: 2),
+            controller: allergies,
+            label: 'Known allergies',
+            icon: Icons.warning,
+            maxLines: 2,
+          ),
+          const SizedBox(height: 16),
           AppField(
-              controller: meds,
-              label: 'Current medications',
-              icon: Icons.medication,
-              maxLines: 2),
+            controller: meds,
+            label: 'Current medications',
+            icon: Icons.medication,
+            maxLines: 2,
+          ),
+          const SizedBox(height: 16),
           AppField(
-              controller: emergency,
-              label: 'Emergency contact',
-              icon: Icons.phone),
+            controller: emergency,
+            label: 'Emergency contact',
+            icon: Icons.phone,
+          ),
+          const SizedBox(height: 24),
           PrimaryAction(
             label: 'Save health card',
             icon: Icons.save,
@@ -3399,9 +3594,18 @@ class DoctorDashboardScreen extends StatelessWidget {
                 const Icon(Icons.video_camera_front, color: AppColors.green),
                 const SizedBox(width: 12),
                 const Expanded(
-                    child: Text('Online consultation availability',
-                        style: TextStyle(fontWeight: FontWeight.w700))),
+                  child: Text(
+                    'Online consultation availability',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                ),
                 Switch(
+                  activeColor: AppColors.green,
                   value: doctor.isOnlineAvailable,
                   onChanged: (value) => store.doctorService.updateDoctor(
                     store,
@@ -3501,10 +3705,39 @@ class _DoctorSlotsScreenState extends State<DoctorSlotsScreen> {
                   spacing: 8,
                   runSpacing: 8,
                   children: doctor.slots
-                      .map((item) => InputChip(
-                            label: Text(item),
-                            onDeleted: () => store.slotService
-                                .removeSlot(store, doctor, item),
+                      .map((item) => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border:
+                                  Border.all(color: const Color(0xFFE0E0E0)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                    fontFamily: 'Poppins',
+                                    color: AppColors.ink,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                GestureDetector(
+                                  onTap: () => store.slotService
+                                      .removeSlot(store, doctor, item),
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 16,
+                                    color: AppColors.muted,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ))
                       .toList(),
                 ),
@@ -3653,39 +3886,94 @@ List<Widget> doctorBookingActions(BuildContext context, Booking booking) {
   final store = context.read<DoctorMitraStore>();
   if (booking.status == 'pending') {
     return [
-      TextButton.icon(
+      FilledButton.icon(
         onPressed: () =>
             store.bookingService.updateStatus(store, booking.id, 'accepted'),
-        icon: const Icon(Icons.check_circle, color: AppColors.green),
-        label: const Text('Accept'),
+        icon: const Icon(Icons.check_circle, color: Colors.white, size: 16),
+        label: const Text('Accept',
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+                fontSize: 13)),
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.green,
+          minimumSize: const Size(100, 36),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
-      TextButton.icon(
+      OutlinedButton.icon(
         onPressed: () =>
             store.bookingService.updateStatus(store, booking.id, 'rejected'),
-        icon: const Icon(Icons.cancel, color: AppColors.red),
-        label: const Text('Reject', style: TextStyle(color: AppColors.red)),
+        icon: const Icon(Icons.cancel, color: AppColors.red, size: 16),
+        label: const Text('Reject',
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: AppColors.red)),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: AppColors.red),
+          foregroundColor: AppColors.red,
+          minimumSize: const Size(100, 36),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     ];
   }
   if (booking.status == 'accepted') {
     return [
       if (booking.type == 'online')
-        TextButton.icon(
+        FilledButton.icon(
           onPressed: () =>
               push(context, OnlineConsultationScreen(booking: booking)),
-          icon: const Icon(Icons.video_call, color: AppColors.green),
-          label: const Text('Start call'),
+          icon: const Icon(Icons.video_call, color: Colors.white, size: 16),
+          label: const Text('Start call',
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13)),
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.green,
+            minimumSize: const Size(100, 36),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
         ),
-      TextButton.icon(
+      FilledButton.icon(
         onPressed: () => push(context, PrescriptionScreen(booking: booking)),
-        icon: const Icon(Icons.edit_note, color: AppColors.green),
-        label: const Text('Prescription'),
+        icon: const Icon(Icons.edit_note, color: Colors.white, size: 16),
+        label: const Text('Prescription',
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+                fontSize: 13)),
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.accent,
+          minimumSize: const Size(100, 36),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
-      TextButton.icon(
+      OutlinedButton.icon(
         onPressed: () =>
             store.bookingService.updateStatus(store, booking.id, 'cancelled'),
-        icon: const Icon(Icons.cancel, color: AppColors.red),
-        label: const Text('Cancel', style: TextStyle(color: AppColors.red)),
+        icon: const Icon(Icons.cancel, color: AppColors.red, size: 16),
+        label: const Text('Cancel',
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: AppColors.red)),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: AppColors.red),
+          foregroundColor: AppColors.red,
+          minimumSize: const Size(100, 36),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     ];
   }
@@ -3920,6 +4208,7 @@ class AdminDashboardScreen extends StatelessWidget {
     return AppPage(
       title: 'Admin Dashboard',
       subtitle: 'Connected operations overview.',
+      useGradientAppBar: true,
       actions: [
         IconButton(
           onPressed: () => showSyncSheet(context),
@@ -3944,11 +4233,11 @@ class AdminDashboardScreen extends StatelessWidget {
               AdminMetric('Doctors', '${store.doctors.length}',
                   Icons.medical_services, AppColors.green),
               AdminMetric('Patients', '${store.patients.length}', Icons.groups,
-                  Colors.blue),
+                  const Color(0xFF2563EB)),
               AdminMetric('Bookings', '${store.bookings.length}',
                   Icons.event_note, AppColors.amber),
               AdminMetric('Revenue', '₹${revenue.toStringAsFixed(0)}',
-                  Icons.currency_rupee, Colors.purple),
+                  Icons.currency_rupee, const Color(0xFF7C3AED)),
             ],
           ),
           const SectionTitle('Booking status chart'),
@@ -3979,21 +4268,83 @@ class AdminDashboardScreen extends StatelessWidget {
           else
             ...store.pendingDoctors
                 .map((doctor) => AdminDoctorCard(doctor: doctor)),
-          const SectionTitle('Patients table'),
+          const SectionTitle('Patients list'),
           PremiumCard(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
+                headingRowColor:
+                    WidgetStateProperty.all(AppColors.mint.withOpacity(0.4)),
+                horizontalMargin: 12,
+                columnSpacing: 24,
                 columns: const [
-                  DataColumn(label: Text('Name')),
-                  DataColumn(label: Text('Mobile')),
-                  DataColumn(label: Text('District')),
+                  DataColumn(
+                    label: Text(
+                      'Name',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Mobile',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'District',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ),
                 ],
                 rows: store.patients
                     .map((user) => DataRow(cells: [
-                          DataCell(Text(user.name)),
-                          DataCell(Text(user.mobile)),
-                          DataCell(Text(user.district)),
+                          DataCell(
+                            Text(
+                              user.name,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: AppColors.ink,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.mobile,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                color: AppColors.muted,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              user.district,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                color: AppColors.muted,
+                              ),
+                            ),
+                          ),
                         ]))
                     .toList(),
               ),
@@ -4051,35 +4402,111 @@ class AdminDoctorCard extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: DoctorAvatar(doctor: doctor),
-            title: Text(doctor.name,
-                style: const TextStyle(fontWeight: FontWeight.w800)),
-            subtitle: Text(
-                '${doctor.specialty} • ₹${doctor.fee.toStringAsFixed(0)} • ${doctor.district}'),
+            title: Text(
+              doctor.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                fontFamily: 'Poppins',
+                color: AppColors.ink,
+              ),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                '${doctor.specialty} • ₹${doctor.fee.toStringAsFixed(0)} • ${doctor.district}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Poppins',
+                  color: AppColors.muted,
+                ),
+              ),
+            ),
             trailing: StatusChip(doctor.status, statusColor(doctor.status)),
           ),
+          const SizedBox(height: 8),
+          const Divider(height: 1, color: Color(0xFFEEEEEE)),
+          const SizedBox(height: 8),
           Wrap(
-            spacing: 8,
+            spacing: 12,
             children: [
               if (doctor.status == 'pending')
                 TextButton(
-                    onPressed: () =>
-                        store.adminService.approveDoctor(store, doctor.id),
-                    child: const Text('Approve')),
+                  style: TextButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  onPressed: () =>
+                      store.adminService.approveDoctor(store, doctor.id),
+                  child: const Text(
+                    'Approve',
+                    style: TextStyle(
+                      color: AppColors.green,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
               if (doctor.status == 'pending')
                 TextButton(
-                    onPressed: () =>
-                        store.adminService.rejectDoctor(store, doctor.id),
-                    child: const Text('Reject',
-                        style: TextStyle(color: AppColors.red))),
-              TextButton(
+                  style: TextButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   onPressed: () =>
-                      showAdminDoctorEditor(context, doctor: doctor),
-                  child: const Text('Edit')),
+                      store.adminService.rejectDoctor(store, doctor.id),
+                  child: const Text(
+                    'Reject',
+                    style: TextStyle(
+                      color: AppColors.red,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
               TextButton(
-                  onPressed: () =>
-                      store.adminService.deleteDoctor(store, doctor.id),
-                  child: const Text('Delete',
-                      style: TextStyle(color: AppColors.red))),
+                style: TextButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () => showAdminDoctorEditor(context, doctor: doctor),
+                child: const Text(
+                  'Edit',
+                  style: TextStyle(
+                    color: AppColors.green,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () =>
+                    store.adminService.deleteDoctor(store, doctor.id),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(
+                    color: AppColors.red,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -4169,18 +4596,36 @@ class AdminSettingsScreen extends StatelessWidget {
       title: 'Settings & Reports',
       subtitle: 'Specialties, banners, health tips and ambulance reports.',
       child: ListView(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         children: [
           PremiumCard(
             child: SwitchListTile(
+              activeColor: AppColors.green,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               value: store.maintenanceMode,
               onChanged: (value) =>
                   store.adminService.setMaintenanceMode(store, value),
-              title: const Text('Maintenance mode',
-                  style: TextStyle(fontWeight: FontWeight.w800)),
-              subtitle: const Text('Backend-ready app setting stored locally.'),
+              title: const Text(
+                'Maintenance mode',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                  color: AppColors.ink,
+                ),
+              ),
+              subtitle: const Text(
+                'Backend-ready app setting stored locally.',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  color: AppColors.muted,
+                ),
+              ),
             ),
           ),
+          const SizedBox(height: 12),
           SectionTitle('Manage specialties',
               action: 'Add',
               onTap: () => promptText(context, 'Add specialty', 'Specialty')
@@ -4189,12 +4634,32 @@ class AdminSettingsScreen extends StatelessWidget {
                       store.adminService.addSpecialty(store, value);
                     }
                   })),
+          const SizedBox(height: 8),
           Wrap(
               spacing: 8,
               runSpacing: 8,
               children: store.specialties
-                  .map((item) => Chip(label: Text(item)))
+                  .map((item) => Chip(
+                        label: Text(
+                          item,
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            color: AppColors.green,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        backgroundColor: AppColors.mint,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                              color: AppColors.green, width: 1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
+                      ))
                   .toList()),
+          const SizedBox(height: 16),
           SectionTitle('Manage banners / health tips',
               action: 'Add',
               onTap: () =>
@@ -4203,37 +4668,45 @@ class AdminSettingsScreen extends StatelessWidget {
                       store.adminService.addHealthTip(store, value);
                     }
                   })),
+          const SizedBox(height: 8),
           ...store.healthTips
               .map((tip) => InfoStrip(icon: Icons.tips_and_updates, text: tip)),
+          const SizedBox(height: 16),
           const SectionTitle('Ambulance requests'),
+          const SizedBox(height: 8),
           ...store.ambulances.map((amb) => InfoStrip(
               icon: Icons.emergency,
               text: '${amb.name} • ${amb.district} • ${amb.phone}')),
+          const SizedBox(height: 16),
           const SectionTitle('Patient ambulance requests'),
+          const SizedBox(height: 8),
           if (store.ambulanceRequests.isEmpty)
             const EmptyState(
                 icon: Icons.emergency,
                 title: 'No ambulance requests',
-                text: 'Patient emergency requests will appear here.'),
-          ...store.ambulanceRequests.map((request) => AmbulanceRequestCard(
-                request: request,
-                actions: [
-                  TextButton.icon(
-                    onPressed: () => store.ambulanceService
-                        .updateRequestStatus(store, request.id, 'dispatched'),
-                    icon:
-                        const Icon(Icons.check_circle, color: AppColors.green),
-                    label: const Text('Dispatch'),
-                  ),
-                  TextButton.icon(
-                    onPressed: () => store.ambulanceService
-                        .updateRequestStatus(store, request.id, 'closed'),
-                    icon: const Icon(Icons.done_all, color: AppColors.green),
-                    label: const Text('Close'),
-                  ),
-                ],
-              )),
+                text: 'Patient emergency requests will appear here.')
+          else
+            ...store.ambulanceRequests.map((request) => AmbulanceRequestCard(
+                  request: request,
+                  actions: [
+                    TextButton.icon(
+                      onPressed: () => store.ambulanceService
+                          .updateRequestStatus(store, request.id, 'dispatched'),
+                      icon: const Icon(Icons.check_circle,
+                          color: AppColors.green),
+                      label: const Text('Dispatch'),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => store.ambulanceService
+                          .updateRequestStatus(store, request.id, 'closed'),
+                      icon: const Icon(Icons.done_all, color: AppColors.green),
+                      label: const Text('Close'),
+                    ),
+                  ],
+                )),
+          const SizedBox(height: 16),
           const SectionTitle('Reports'),
+          const SizedBox(height: 8),
           ReportCard(
               label: 'Doctor approval conversion',
               value:
@@ -4245,6 +4718,7 @@ class AdminSettingsScreen extends StatelessWidget {
               label: 'Online availability',
               value:
                   '${store.approvedDoctors.where((e) => e.isOnlineAvailable).length} doctors online'),
+          const SizedBox(height: 16),
           ActionTile(
               icon: Icons.logout,
               title: 'Logout admin',
@@ -4493,16 +4967,17 @@ class AmbulanceRequestCard extends StatelessWidget {
 }
 
 TextStyle get sectionStyle => const TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w800,
+      fontSize: 17, // Section heading: FontWeight.w700, size 17
+      fontWeight: FontWeight.w700,
       color: AppColors.ink,
     );
 
-List<BoxShadow> get softShadow => [
+List<BoxShadow> get softShadow => const [
       BoxShadow(
-        color: AppColors.green.withOpacity(0.08),
-        blurRadius: 24,
-        offset: const Offset(0, 10),
+        color: Color(0x14000000), // shadow: 0px 2px 12px rgba(0,0,0,0.08)
+        blurRadius: 12,
+        offset: Offset(0, 2),
+        spreadRadius: 0,
       ),
     ];
 
@@ -4529,16 +5004,25 @@ void pushReplacement(BuildContext context, Widget screen) {
 
 InputDecoration inputDecoration(String label, IconData icon) => InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon),
+      labelStyle: const TextStyle(color: AppColors.muted, fontSize: 13),
+      hintStyle: const TextStyle(color: AppColors.muted, fontSize: 13),
+      prefixIcon: Icon(icon, color: AppColors.green), // leading icon green
       filled: true,
-      fillColor: Colors.white,
+      fillColor: Colors.white, // white bg
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: BorderSide(color: AppColors.green.withOpacity(0.14)),
+        borderRadius: BorderRadius.circular(10), // border radius 10px
+        borderSide:
+            const BorderSide(color: Color(0xFFE0E0E0)), // grey border #E0E0E0
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: BorderSide(color: AppColors.green.withOpacity(0.12)),
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(
+            color: AppColors.green, width: 1.5), // focus border green
       ),
     );
 
@@ -4564,6 +5048,33 @@ class LoginScaffold extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(22),
           children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x0F000000),
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/logo.jpg',
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             PremiumHeader(title: title, subtitle: subtitle, icon: icon),
             const SizedBox(height: 18),
             ...children,
@@ -4580,6 +5091,7 @@ class AppPage extends StatelessWidget {
   final Widget child;
   final bool showBack;
   final List<Widget> actions;
+  final bool useGradientAppBar;
 
   const AppPage({
     super.key,
@@ -4588,22 +5100,77 @@ class AppPage extends StatelessWidget {
     required this.child,
     this.showBack = false,
     this.actions = const [],
+    this.useGradientAppBar = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final titleColor = useGradientAppBar ? Colors.white : AppColors.ink;
+    final subtitleColor = useGradientAppBar ? Colors.white70 : AppColors.muted;
+    final leadingColor = useGradientAppBar ? Colors.white : AppColors.green;
+
     return Scaffold(
+      backgroundColor: AppColors.bg,
       appBar: AppBar(
-        leading: showBack ? const BackButton() : null,
+        leading: showBack ? BackButton(color: leadingColor) : null,
+        backgroundColor: Colors.transparent,
+        flexibleSpace: useGradientAppBar
+            ? Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.green, AppColors.deepGreen],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              )
+            : Container(color: Colors.white),
+        elevation: 0,
+        titleSpacing: showBack ? 0 : 16,
+        bottom: useGradientAppBar
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(1.0),
+                child: Container(
+                  color: Colors.black.withOpacity(0.04),
+                  height: 1.0,
+                ),
+              ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
-            Text(subtitle,
-                style: const TextStyle(fontSize: 12, color: Colors.white70)),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: titleColor,
+                fontFamily: 'Poppins',
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12,
+                color: subtitleColor,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Poppins',
+              ),
+            ),
           ],
         ),
-        actions: actions,
+        actions: actions.map((w) {
+          if (useGradientAppBar) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                iconTheme: const IconThemeData(color: Colors.white),
+              ),
+              child: w,
+            );
+          }
+          return w;
+        }).toList(),
       ),
       body: child,
     );
@@ -4671,15 +5238,51 @@ class PrimaryAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: FilledButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(label),
-        style: FilledButton.styleFrom(
-          backgroundColor: AppColors.green,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Container(
+        height: 52, // height 52px
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              AppColors.green,
+              AppColors.accent
+            ], // gradient linear from #0B6E4F to #00A878
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12), // border radius 12px
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.green.withOpacity(0.2), // slight shadow
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 18, color: Colors.white),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -4702,15 +5305,33 @@ class SecondaryAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(label),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.green,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: SizedBox(
+        height: 52, // height 52px
+        child: OutlinedButton(
+          onPressed: onPressed,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.green,
+            backgroundColor: Colors.white, // white bg
+            side: const BorderSide(
+                color: AppColors.green, width: 1.5), // green border
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12), // border radius 12px
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 18, color: AppColors.green),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.green), // green text
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -4740,18 +5361,31 @@ class RoleCard extends StatelessWidget {
           CircleAvatar(
             radius: 28,
             backgroundColor: AppColors.mint,
-            child: Icon(icon, color: AppColors.green, size: 30),
+            child: Icon(icon, color: AppColors.green, size: 26),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 18)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                    color: AppColors.ink,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(subtitle, style: const TextStyle(color: AppColors.muted)),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: AppColors.muted,
+                    fontSize: 12,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
               ],
             ),
           ),
@@ -4777,34 +5411,47 @@ class PremiumHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-            colors: [AppColors.deepGreen, AppColors.green]),
-        borderRadius: BorderRadius.circular(30),
+          colors: [AppColors.deepGreen, AppColors.green],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: softShadow,
       ),
       child: Row(
         children: [
           CircleAvatar(
-            radius: 30,
+            radius: 28,
             backgroundColor: Colors.white,
-            child: Icon(icon, color: AppColors.green, size: 32),
+            child: Icon(icon, color: AppColors.green, size: 28),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 24)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
                 const SizedBox(height: 6),
-                Text(subtitle,
-                    style:
-                        const TextStyle(color: Colors.white70, height: 1.35)),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontFamily: 'Poppins',
+                    fontSize: 13,
+                    height: 1.35,
+                  ),
+                ),
               ],
             ),
           ),
@@ -4823,19 +5470,22 @@ class PremiumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: 12), // Between cards gap: 12px
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: softShadow,
-        border: Border.all(color: AppColors.green.withOpacity(0.06)),
+        color: Colors.white, // Card BG: #FFFFFF
+        borderRadius: BorderRadius.circular(16), // Card border radius: 16px
+        boxShadow: softShadow, // shadow: 0px 2px 12px rgba(0,0,0,0.08)
+        border: Border.all(color: Colors.black.withOpacity(0.02)),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16),
           onTap: onTap,
-          child: Padding(padding: const EdgeInsets.all(16), child: child),
+          child: Padding(
+            padding: const EdgeInsets.all(16), // Inner card padding: 16px
+            child: child,
+          ),
         ),
       ),
     );
@@ -4851,19 +5501,27 @@ class InfoStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: AppColors.mint,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.green),
+          Icon(icon, color: AppColors.green, size: 20),
           const SizedBox(width: 12),
           Expanded(
-              child: Text(text,
-                  style: const TextStyle(fontWeight: FontWeight.w600))),
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                fontFamily: 'Poppins',
+                color: AppColors.green,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -4881,23 +5539,79 @@ class NavBar extends StatelessWidget {
   final ValueChanged<int> onTap;
   final List<NavItem> items;
 
-  const NavBar(
-      {super.key,
-      required this.index,
-      required this.onTap,
-      required this.items});
+  const NavBar({
+    super.key,
+    required this.index,
+    required this.onTap,
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      selectedIndex: index,
-      onDestinationSelected: onTap,
-      backgroundColor: Colors.white,
-      indicatorColor: AppColors.mint,
-      destinations: items
-          .map((item) =>
-              NavigationDestination(icon: Icon(item.icon), label: item.label))
-          .toList(),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(items.length, (i) {
+              final item = items[i];
+              final isSelected = index == i;
+              return GestureDetector(
+                onTap: () => onTap(i),
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                  width: 70,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 6),
+                        decoration: BoxDecoration(
+                          color:
+                              isSelected ? AppColors.mint : Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          item.icon,
+                          color: isSelected ? AppColors.green : AppColors.muted,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        item.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w500,
+                          fontSize: 10.5,
+                          color: isSelected ? AppColors.green : AppColors.muted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -4962,18 +5676,37 @@ class MetricTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PremiumCard(
-      child: Column(
-        children: [
-          Icon(icon, color: AppColors.green),
-          const SizedBox(height: 8),
-          Text(value,
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
-          Text(label,
+    return Padding(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 4), // Spacing between cards
+      child: PremiumCard(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.green, size: 24), // green icon on top
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700, // bold number
+                fontFamily: 'Poppins',
+                color: AppColors.ink,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-        ],
+              style: const TextStyle(
+                color: AppColors.muted, // grey label
+                fontSize: 11,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -4994,24 +5727,56 @@ class QuickGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 3,
-      childAspectRatio: 0.86,
+      childAspectRatio: 0.85,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
       children: items
           .map((item) => InkWell(
                 onTap: item.onTap,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(16),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 34,
-                      backgroundColor: AppColors.mint,
-                      child: Icon(item.icon, color: AppColors.green, size: 30),
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          colors: [
+                            AppColors.green,
+                            AppColors.accent
+                          ], // green bg gradient
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.green.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Icon(item.icon,
+                            color: Colors.white, size: 28), // icon size 28
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(item.label,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.w800)),
+                    const SizedBox(height: 8),
+                    Text(
+                      item.label,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600, // semibold label below
+                        fontSize: 13,
+                        color: AppColors.ink,
+                      ),
+                    ),
                   ],
                 ),
               ))
@@ -5067,30 +5832,45 @@ class DoctorCardMvp extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w900))),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Poppins',
+                                color: AppColors.ink))),
                     if (doctor.isOnlineAvailable)
-                      const StatusChip('Online', Colors.green),
+                      const StatusChip('Online', AppColors.green),
                   ],
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 4),
                 Text(doctor.specialty,
                     style: const TextStyle(
-                        color: AppColors.green, fontWeight: FontWeight.w800)),
+                        color: AppColors.green,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        fontFamily: 'Poppins')),
                 Text(doctor.degree,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: AppColors.muted)),
+                    style: const TextStyle(
+                        color: AppColors.muted,
+                        fontSize: 13,
+                        fontFamily: 'Poppins')),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.star, color: AppColors.amber, size: 18),
+                    const Icon(Icons.star_rounded,
+                        color: AppColors.amber, size: 18),
                     Text(' ${doctor.rating} (${doctor.reviews})',
-                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                            fontFamily: 'Poppins',
+                            color: AppColors.amber)),
                     const Spacer(),
                     Text('₹${doctor.fee.toStringAsFixed(0)}',
                         style: const TextStyle(
                             color: AppColors.green,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
                             fontSize: 18)),
                   ],
                 ),
@@ -5109,14 +5889,24 @@ class DoctorAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isCardio = doctor.specialty.contains('Cardio') ||
+        doctor.specialty.contains('हृदय');
+    final isGyne = doctor.specialty.contains('Gyne') ||
+        doctor.specialty.contains('स्त्री');
     return CircleAvatar(
-      radius: 34,
-      backgroundColor: doctor.specialty.contains('Cardio')
+      radius: 32,
+      backgroundColor: isCardio
           ? const Color(0xFFFFECEC)
-          : doctor.specialty.contains('Gyne')
+          : isGyne
               ? const Color(0xFFFFE5F1)
               : AppColors.mint,
-      child: const Icon(Icons.person, color: AppColors.green, size: 34),
+      child: Icon(Icons.person,
+          color: isCardio
+              ? const Color(0xFFEF4444)
+              : isGyne
+                  ? const Color(0xFFEC4899)
+                  : AppColors.green,
+          size: 32),
     );
   }
 }
@@ -5132,16 +5922,36 @@ class BigDoctorHeader extends StatelessWidget {
         children: [
           DoctorAvatar(doctor: doctor),
           const SizedBox(height: 12),
-          Text(doctor.name,
-              textAlign: TextAlign.center,
-              style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
-          Text(doctor.specialty,
-              style: const TextStyle(
-                  color: AppColors.green, fontWeight: FontWeight.w800)),
-          Text('${doctor.degree} • ${doctor.experience} yrs',
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.muted)),
+          Text(
+            doctor.name,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Poppins',
+              color: AppColors.ink,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            doctor.specialty,
+            style: const TextStyle(
+              color: AppColors.green,
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              fontFamily: 'Poppins',
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${doctor.degree} • ${doctor.experience} yrs experience',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.muted,
+              fontSize: 13,
+              fontFamily: 'Poppins',
+            ),
+          ),
           const SizedBox(height: 12),
           StatusChip(doctor.status, statusColor(doctor.status)),
         ],
@@ -5158,14 +5968,49 @@ class StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color textCol = color;
+    Color bgCol = color.withOpacity(0.12);
+
+    switch (label.toLowerCase()) {
+      case 'pending':
+      case 'requested':
+        textCol = const Color(0xFFE65100);
+        bgCol = const Color(0xFFFFF3E0);
+        break;
+      case 'accepted':
+      case 'upcoming':
+      case 'approved':
+        textCol = const Color(0xFF1565C0);
+        bgCol = const Color(0xFFE3F2FD);
+        break;
+      case 'completed':
+      case 'closed':
+      case 'dispatched':
+        textCol = const Color(0xFF2E7D32);
+        bgCol = const Color(0xFFE8F5E9);
+        break;
+      case 'cancelled':
+      case 'rejected':
+        textCol = const Color(0xFFC62828);
+        bgCol = const Color(0xFFFFEBEE);
+        break;
+    }
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(40)),
-      child: Text(label,
-          style: TextStyle(
-              color: color, fontWeight: FontWeight.w800, fontSize: 12)),
+        color: bgCol,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: textCol,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+          fontFamily: 'Poppins',
+        ),
+      ),
     );
   }
 }
@@ -5212,34 +6057,69 @@ class BookingCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(doctor.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w900, fontSize: 17)),
-                    Text(doctor.specialty,
-                        style: const TextStyle(color: AppColors.muted)),
+                    Text(
+                      doctor.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      doctor.specialty,
+                      style: const TextStyle(
+                        color: AppColors.muted,
+                        fontSize: 13,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ],
                 ),
               ),
               StatusChip(booking.status, statusColor(booking.status)),
             ],
           ),
-          const SizedBox(height: 14),
-          if (showPatient)
-            InfoLine(Icons.person, 'Patient',
-                '${booking.patientName} • ${booking.patientMobile}'),
-          InfoLine(
-              Icons.event, 'Date & time', '${booking.date}, ${booking.time}'),
-          InfoLine(
-              Icons.video_call,
-              'Type',
-              booking.type == 'online'
-                  ? 'Online consultation'
-                  : 'Clinic visit'),
-          InfoLine(Icons.notes, 'Symptoms', booking.symptoms),
-          InfoLine(Icons.currency_rupee, 'Fee',
-              '₹${booking.fee.toStringAsFixed(0)}'),
-          if (actions.isNotEmpty)
-            Wrap(alignment: WrapAlignment.end, spacing: 8, children: actions),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.bg,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                if (showPatient)
+                  InfoLine(Icons.person_outline, 'Patient',
+                      '${booking.patientName} • ${booking.patientMobile}'),
+                InfoLine(Icons.event_outlined, 'Date & time',
+                    '${booking.date}, ${booking.time}'),
+                InfoLine(
+                    Icons.video_call_outlined,
+                    'Type',
+                    booking.type == 'online'
+                        ? 'Online consultation'
+                        : 'Clinic visit'),
+                if (booking.symptoms.isNotEmpty)
+                  InfoLine(Icons.notes_outlined, 'Symptoms', booking.symptoms),
+                InfoLine(Icons.currency_rupee_outlined, 'Fee',
+                    '₹${booking.fee.toStringAsFixed(0)}'),
+              ],
+            ),
+          ),
+          if (actions.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: actions.map((a) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: a,
+                );
+              }).toList(),
+            ),
+          ],
         ],
       ),
     );
@@ -5260,12 +6140,27 @@ class InfoLine extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppColors.muted, size: 19),
+          Icon(icon, color: AppColors.muted, size: 16),
           const SizedBox(width: 8),
-          Text('$label: ', style: const TextStyle(color: AppColors.muted)),
+          Text(
+            '$label: ',
+            style: const TextStyle(
+              color: AppColors.muted,
+              fontSize: 13,
+              fontFamily: 'Poppins',
+            ),
+          ),
           Expanded(
-              child: Text(value,
-                  style: const TextStyle(fontWeight: FontWeight.w700))),
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                fontFamily: 'Poppins',
+                color: AppColors.ink,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -5370,16 +6265,30 @@ class CardMini extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.16),
-          borderRadius: BorderRadius.circular(16)),
+          color: Colors.white.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: const TextStyle(color: Colors.white70, fontSize: 12)),
-          Text(value,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w800)),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 11,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              fontFamily: 'Poppins',
+            ),
+          ),
         ],
       ),
     );
@@ -5476,20 +6385,48 @@ class AdminMetric extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: softShadow),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 12,
+            offset: Offset(0, 2),
+          )
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-              backgroundColor: color.withOpacity(0.12),
-              child: Icon(icon, color: color)),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 18),
+          ),
           const Spacer(),
-          Text(value,
-              style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
-          Text(label, style: const TextStyle(color: AppColors.muted)),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Poppins',
+              color: AppColors.ink,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: const TextStyle(
+              color: AppColors.muted,
+              fontSize: 12,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
@@ -5505,34 +6442,71 @@ class MiniBarChart extends StatelessWidget {
     final max = values.values.fold<double>(1, (a, b) => a > b ? a : b);
     return PremiumCard(
       child: Column(
-        children: values.entries
-            .map((entry) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                          width: 78,
-                          child: Text(entry.key,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w700))),
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: LinearProgressIndicator(
-                            value: entry.value / max,
-                            minHeight: 12,
-                            color: statusColor(entry.key.toLowerCase()),
-                            backgroundColor: AppColors.mint,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(entry.value.toStringAsFixed(0),
-                          style: const TextStyle(fontWeight: FontWeight.w900)),
-                    ],
+        children: values.entries.map((entry) {
+          final percentage = max > 0 ? (entry.value / max) : 0.0;
+          final color = statusColor(entry.key.toLowerCase());
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 84,
+                  child: Text(
+                    entry.key,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      fontFamily: 'Poppins',
+                      color: AppColors.ink,
+                    ),
                   ),
-                ))
-            .toList(),
+                ),
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Container(
+                        height: 10,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.bg,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 10,
+                              width: constraints.maxWidth * percentage,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [color, color.withOpacity(0.7)],
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 24,
+                  child: Text(
+                    entry.value.toStringAsFixed(0),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      fontFamily: 'Poppins',
+                      color: AppColors.ink,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -5545,7 +6519,50 @@ class ReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InfoStrip(icon: Icons.insights, text: '$label: $value');
+    return PremiumCard(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.mint,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.trending_up_rounded,
+              color: AppColors.green,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    color: AppColors.muted,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Poppins',
+                    color: AppColors.ink,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
