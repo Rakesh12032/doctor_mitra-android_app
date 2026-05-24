@@ -10,10 +10,14 @@ import '../widgets/custom_ui.dart';
 import '../data/doctors_data.dart';
 import 'doctors_screen.dart';
 import 'teleconsult_screen.dart';
-import 'health_card_screen.dart';
+import 'health_vault_screen.dart';
 import 'hospitals_screen.dart';
 import 'ambulance_screen.dart';
 import 'bookings_screen.dart';
+import 'notification_center_screen.dart';
+import 'articles_screen.dart';
+import 'abha_screen.dart';
+import 'medicine_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,6 +45,8 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 24),
               _buildTopDoctors(context, lang),
               const SizedBox(height: 24),
+              _buildHospitalsSection(context, lang),
+              const SizedBox(height: 24),
               _buildHowItWorks(context, lang),
               const SizedBox(height: 40),
             ],
@@ -52,7 +58,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context, LanguageProvider lang) {
-    return Padding(
+    return Container(
+      color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,33 +70,33 @@ class HomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: AppColors.primary.withOpacity(0.15), width: 2),
+                      color: AppColors.primary.withOpacity(0.12), width: 2),
                 ),
                 child: const CircleAvatar(
-                  radius: 24,
-                  backgroundColor: AppColors.cardBg,
-                  child: Icon(Icons.person, color: AppColors.primary, size: 28),
+                  radius: 22,
+                  backgroundColor: AppColors.primaryLight,
+                  child: Icon(Icons.health_and_safety, color: AppColors.primary, size: 24),
                 ),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    lang.isHindi ? "आपका स्वागत है" : "Welcome back,",
-                    style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.textMuted,
-                        fontFamily: 'Poppins'),
-                  ),
                   const Text(
-                    "Patient User",
+                    "Doctor Mitra",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.textDark,
-                      fontFamily: 'Poppins',
+                      fontFamily: 'Nunito',
                     ),
+                  ),
+                  Text(
+                    lang.isHindi ? "बिहार का अपना डॉक्टर प्लेटफॉर्म" : "Bihar's Own Doctor Platform",
+                    style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textMuted,
+                        fontFamily: 'Nunito'),
                   ),
                 ],
               ),
@@ -103,17 +110,26 @@ class HomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.cardBg,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2)),
-                  ],
+                  boxShadow: AppColors.premiumShadow,
+                  border: Border.all(color: AppColors.border.withOpacity(0.3)),
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.notifications_none,
-                      color: AppColors.textDark, size: 24),
-                  onPressed: () {},
+                  icon: const Icon(Icons.cloud_sync,
+                      color: AppColors.primary, size: 24),
+                  onPressed: () {
+                    // Manual refresh/sync
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          lang.isHindi ? "सिंक हो रहा है..." : "Syncing details...",
+                          style: const TextStyle(fontFamily: 'Nunito'),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        backgroundColor: AppColors.primary,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -130,16 +146,16 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.secondary],
+            colors: [AppColors.primary, AppColors.accent],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16), // 16px radius
           boxShadow: [
             BoxShadow(
-                color: AppColors.primary.withOpacity(0.2),
-                blurRadius: 16,
-                offset: const Offset(0, 6)),
+                color: AppColors.primary.withOpacity(0.15),
+                blurRadius: 12,
+                offset: const Offset(0, 4)),
           ],
         ),
         child: Column(
@@ -160,7 +176,7 @@ class HomeScreen extends StatelessWidget {
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
                           height: 1.2,
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Nunito',
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -171,7 +187,7 @@ class HomeScreen extends StatelessWidget {
                         style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 13,
-                            fontFamily: 'Poppins'),
+                            fontFamily: 'Nunito'),
                       ),
                     ],
                   ),
@@ -213,7 +229,7 @@ class HomeScreen extends StatelessWidget {
                       style: const TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 14,
-                          fontFamily: 'Poppins'),
+                          fontFamily: 'Nunito'),
                     ),
                   ],
                 ),
@@ -238,9 +254,9 @@ class HomeScreen extends StatelessWidget {
         'screen': const TeleconsultScreen()
       },
       {
-        'icon': Icons.credit_card_outlined,
-        'label': lang.t('health_card'),
-        'screen': const HealthCardScreen()
+        'icon': Icons.folder_shared_outlined,
+        'label': lang.isHindi ? 'हेल्थ वॉल्ट' : 'Health Vault',
+        'screen': const HealthVaultScreen()
       },
       {
         'icon': Icons.local_hospital_outlined,
@@ -256,6 +272,21 @@ class HomeScreen extends StatelessWidget {
         'icon': Icons.calendar_today_outlined,
         'label': lang.isHindi ? 'मेरी बुकिंग' : 'My Bookings',
         'screen': const BookingsScreen()
+      },
+      {
+        'icon': Icons.article_outlined,
+        'label': lang.isHindi ? 'हेल्थ ब्लॉग' : 'Health Blogs',
+        'screen': const ArticlesScreen()
+      },
+      {
+        'icon': Icons.badge_outlined,
+        'label': lang.isHindi ? 'आभा कार्ड' : 'ABHA Card',
+        'screen': const AbhaScreen()
+      },
+      {
+        'icon': Icons.medical_information_outlined,
+        'label': lang.isHindi ? 'दवाइयाँ' : 'Medicines',
+        'screen': const MedicineScreen()
       },
     ];
 
@@ -304,13 +335,8 @@ class HomeScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.cardBg,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 2)),
-          ],
-          border: Border.all(color: AppColors.border.withOpacity(0.5)),
+          boxShadow: AppColors.premiumShadow,
+          border: Border.all(color: AppColors.border.withOpacity(0.4)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -321,19 +347,19 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: const LinearGradient(
-                  colors: [AppColors.primary, AppColors.secondary],
+                  colors: [AppColors.primary, AppColors.accent],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.2),
+                    color: AppColors.primary.withOpacity(0.18),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: Center(child: Icon(icon, color: Colors.white, size: 26)),
+              child: Center(child: Icon(icon, color: Colors.white, size: 28)), // Icon size 28
             ),
             const SizedBox(height: 10),
             Padding(
@@ -345,10 +371,10 @@ class HomeScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.textDark,
                     height: 1.1,
-                    fontFamily: 'Poppins'),
+                    fontFamily: 'Nunito'),
               ),
             ),
           ],
@@ -385,14 +411,9 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.lightBackground,
+        color: AppColors.primaryLight,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2)),
-        ],
+        boxShadow: AppColors.premiumShadow,
       ),
       child: Column(
         children: [
@@ -401,10 +422,10 @@ class HomeScreen extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
                 fontSize: 16,
                 color: AppColors.textDark,
-                fontFamily: 'Poppins'),
+                fontFamily: 'Nunito'),
           ),
           const SizedBox(height: 2),
           Text(
@@ -412,7 +433,7 @@ class HomeScreen extends StatelessWidget {
             style: const TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 12,
-                fontFamily: 'Poppins'),
+                fontFamily: 'Nunito'),
           ),
         ],
       ),
@@ -477,7 +498,7 @@ class HomeScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 290, // Increased height to accommodate the larger DoctorCard
+          height: 290,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -490,6 +511,93 @@ class HomeScreen extends StatelessWidget {
                 child: DoctorCard(doctor: doctor),
               );
             },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHospitalsSection(BuildContext context, LanguageProvider lang) {
+    final List<Map<String, String>> mockHospitals = [
+      {
+        'nameEn': 'Sadar Hospital Saharsa',
+        'nameHi': 'सदर अस्पताल सहरसा',
+        'addressEn': 'Hospital Road, Saharsa, Bihar',
+        'addressHi': 'अस्पताल रोड, सहरसा, बिहार',
+      },
+      {
+        'nameEn': 'Patna City Hospital',
+        'nameHi': 'पटना सिटी अस्पताल',
+        'addressEn': 'Bailey Road, Patna, Bihar',
+        'addressHi': 'बेली रोड, पटना, बिहार',
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: lang.isHindi ? 'नज़दीकी अस्पताल' : 'Hospitals Near You',
+          actionLabel: lang.isHindi ? 'सभी देखें' : 'See All',
+          onAction: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HospitalsScreen()),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: mockHospitals.map((hosp) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: AppColors.premiumShadow,
+                  border: Border.all(color: Colors.black.withOpacity(0.015)),
+                ),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 20,
+                      backgroundColor: AppColors.primaryLight,
+                      child: Icon(Icons.add, color: AppColors.primary, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            lang.isHindi ? hosp['nameHi']! : hosp['nameEn']!,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textDark,
+                              fontFamily: 'Nunito',
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            lang.isHindi ? hosp['addressHi']! : hosp['addressEn']!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                              fontFamily: 'Nunito',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
+                  ],
+                ),
+              );
+            }).toList(),
           ),
         ),
       ],
@@ -509,12 +617,7 @@ class HomeScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.cardBg,
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
-                    blurRadius: 12,
-                    offset: const Offset(0, 2)),
-              ],
+              boxShadow: AppColors.premiumShadow,
               border: Border.all(color: Colors.black.withOpacity(0.01)),
             ),
             child: Row(
@@ -552,7 +655,7 @@ class HomeScreen extends StatelessWidget {
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      fontFamily: 'Poppins')),
+                      fontFamily: 'Nunito')),
             ),
           ),
           const SizedBox(height: 12),
@@ -565,7 +668,7 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 13,
                 color: AppColors.textMedium,
                 height: 1.3,
-                fontFamily: 'Poppins'),
+                fontFamily: 'Nunito'),
           ),
         ],
       ),

@@ -22,14 +22,7 @@ class DoctorCard extends StatelessWidget {
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black.withOpacity(0.015)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000), // shadow: 0px 2px 12px rgba(0,0,0,0.08)
-            blurRadius: 12,
-            offset: Offset(0, 2),
-            spreadRadius: 0,
-          )
-        ],
+        boxShadow: AppColors.premiumShadow,
       ),
       child: Material(
         color: Colors.transparent,
@@ -51,20 +44,21 @@ class DoctorCard extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Avatar
+                    // Avatar with colored background per specialty
                     Container(
                       width: 64,
                       height: 64,
                       decoration: BoxDecoration(
-                        color: doctor.specialtyColor.withOpacity(0.1),
+                        color: doctor.specialtyColor.withOpacity(0.12),
                         shape: BoxShape.circle,
-                        border: Border.all(
-                            color: doctor.specialtyColor.withOpacity(0.2),
-                            width: 1.5),
                       ),
                       child: Center(
-                          child: Icon(Icons.person,
-                              color: doctor.specialtyColor, size: 32)),
+                        child: Icon(
+                          Icons.person,
+                          color: doctor.specialtyColor,
+                          size: 32,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 16),
                     // Details
@@ -85,7 +79,7 @@ class DoctorCard extends StatelessWidget {
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.textDark,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Nunito',
                                   ),
                                 ),
                               ),
@@ -115,7 +109,7 @@ class DoctorCard extends StatelessWidget {
                                           color: AppColors.success,
                                           fontSize: 11,
                                           fontWeight: FontWeight.w700,
-                                          fontFamily: 'Poppins',
+                                          fontFamily: 'Nunito',
                                         ),
                                       ),
                                     ],
@@ -132,7 +126,7 @@ class DoctorCard extends StatelessWidget {
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
-                              fontFamily: 'Poppins',
+                              fontFamily: 'Nunito',
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -143,7 +137,7 @@ class DoctorCard extends StatelessWidget {
                             style: const TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 13,
-                              fontFamily: 'Poppins',
+                              fontFamily: 'Nunito',
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -160,7 +154,7 @@ class DoctorCard extends StatelessWidget {
                                     color: AppColors.textMedium,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
-                                    fontFamily: 'Poppins'),
+                                    fontFamily: 'Nunito'),
                               ),
                             ],
                           )
@@ -176,48 +170,54 @@ class DoctorCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppColors.warning.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(8),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.warning.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.star_rounded,
+                                    color: AppColors.warning, size: 16),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${doctor.rating}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: AppColors.warning,
+                                      fontFamily: 'Nunito'),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.star_rounded,
-                                  color: AppColors.warning, size: 16),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${doctor.rating}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: AppColors.warning,
-                                    fontFamily: 'Poppins'),
-                              ),
-                            ],
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              '(${doctor.reviews} ${isHi ? 'समीक्षाएं' : 'Reviews'})',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: AppColors.textMuted,
+                                  fontSize: 13,
+                                  fontFamily: 'Nunito'),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '(${doctor.reviews} ${isHi ? 'समीक्षाएं' : 'Reviews'})',
-                          style: const TextStyle(
-                              color: AppColors.textMuted,
-                              fontSize: 13,
-                              fontFamily: 'Poppins'),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Text(
                       '₹${doctor.fee}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                         fontSize: 18,
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Nunito',
                       ),
                     ),
                   ],
@@ -252,7 +252,7 @@ class DoctorCard extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
-                                  fontFamily: 'Poppins')),
+                                  fontFamily: 'Nunito')),
                         ),
                       ),
                     ),
@@ -262,7 +262,7 @@ class DoctorCard extends StatelessWidget {
                         height: 46,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [AppColors.primary, AppColors.secondary],
+                            colors: [AppColors.primary, AppColors.accent],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -298,7 +298,7 @@ class DoctorCard extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
-                                  fontFamily: 'Poppins',
+                                  fontFamily: 'Nunito',
                                   color: Colors.white)),
                         ),
                       ),

@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:doctor_mitra/mvp_app.dart';
+import 'package:doctor_mitra/main.dart';
+import 'package:doctor_mitra/providers/store_provider.dart';
 
 void main() {
   test('local bridge keeps booking and notifications connected across roles',
@@ -93,33 +95,89 @@ void main() {
   testWidgets('Doctor Mitra app shows role selection',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
+    await tester.binding.setSurfaceSize(const Size(800, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(const DoctorMitraRoleApp());
+    final store = DoctorMitraStore();
+    await store.load();
+
+    await tester.pumpWidget(DoctorMitraApp(store: store));
     await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 3));
     await tester.pumpAndSettle();
 
     expect(find.text('Welcome to Doctor Mitra'), findsOneWidget);
-    expect(find.text('Patient Login'), findsOneWidget);
-    expect(find.text('Doctor Login'), findsOneWidget);
-    expect(find.text('Admin Login'), findsOneWidget);
+    expect(find.text('Patient'), findsOneWidget);
+    expect(find.text('Doctor'), findsOneWidget);
+    expect(find.text('Admin'), findsOneWidget);
   });
 
   testWidgets('admin login opens dashboard without needing back',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
+    await tester.binding.setSurfaceSize(const Size(800, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(const DoctorMitraRoleApp());
+    final store = DoctorMitraStore();
+    await store.load();
+
+    await tester.pumpWidget(DoctorMitraApp(store: store));
     await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 3));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Admin Login'));
+    await tester.tap(find.text('Admin'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Enter admin panel'));
+
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Admin Email / ID'),
+      'admin@doctormitra.in',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Password'),
+      'Rakesh@12032',
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Login Now'));
     await tester.pumpAndSettle();
 
     expect(find.text('Admin Dashboard'), findsOneWidget);
-    expect(find.text('Enter admin panel'), findsNothing);
+  });
+
+  testWidgets('new patient completes registration after OTP',
+      (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.binding.setSurfaceSize(const Size(800, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final store = DoctorMitraStore();
+    await store.load();
+
+    await tester.pumpWidget(DoctorMitraApp(store: store));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Enter Phone Number'),
+      '9998887776',
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Send OTP'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Enter 6-digit OTP'),
+      '123456',
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Verify & Login'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Doctor Mitra'), findsOneWidget);
+    expect(find.text('Find Doctor'), findsOneWidget);
   });
 }

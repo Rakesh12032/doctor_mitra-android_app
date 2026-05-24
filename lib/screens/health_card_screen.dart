@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
+import '../providers/store_provider.dart';
 import '../widgets/language_toggle.dart';
 import '../theme/app_colors.dart';
 import '../widgets/custom_ui.dart';
@@ -11,47 +12,81 @@ class HealthCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lang = Provider.of<LanguageProvider>(context);
+    final store = Provider.of<DoctorMitraStore>(context);
+    final user = store.currentUser;
+    final card = store.currentHealthCard;
+    final isHi = lang.isHindi;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        leading: const BackButton(color: AppColors.primary),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(lang.t('health_card')),
+        title: Text(
+          lang.t('health_card'),
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20, fontFamily: 'Nunito'),
+        ),
         actions: const [
           Padding(padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
         ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDigitalCard(context),
+              _buildDigitalCard(context, store),
               const SizedBox(height: 32),
               SectionHeader(
                   title:
-                      lang.isHindi ? 'मेडिकल जानकारी' : 'Medical Information'),
+                      isHi ? 'मेडिकल जानकारी' : 'Medical Information'),
               const SizedBox(height: 16),
+              _buildInfoTile(
+                icon: Icons.bloodtype_outlined,
+                iconColor: AppColors.primary,
+                title: isHi ? 'रक्त समूह' : 'Blood Group',
+                subtitle: card?.bloodGroup ?? 'Not set',
+              ),
+              const SizedBox(height: 12),
               _buildInfoTile(
                 icon: Icons.warning_amber_rounded,
                 iconColor: AppColors.warning,
                 title: lang.t('allergies'),
-                subtitle: 'Dust, Penicillin',
+                subtitle: card?.allergies ?? 'Not set',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               _buildInfoTile(
                 icon: Icons.medication_outlined,
-                iconColor: AppColors.primary,
+                iconColor: AppColors.accent,
                 title: lang.t('medications'),
-                subtitle: 'None currently',
+                subtitle: card?.medications ?? 'None currently',
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 12),
+              _buildInfoTile(
+                icon: Icons.emergency_outlined,
+                iconColor: AppColors.error,
+                title: isHi ? 'आपातकालीन संपर्क' : 'Emergency Contact',
+                subtitle: card?.emergencyContact ?? user?.mobile ?? 'Not set',
+              ),
+              const SizedBox(height: 32),
               AppButton(
                 text: lang.t('download_card'),
                 icon: Icons.download_outlined,
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        isHi ? "डाउनलोड शुरू हो रहा है..." : "Starting download...",
+                        style: const TextStyle(fontFamily: 'Nunito'),
+                      ),
+                      backgroundColor: AppColors.primary,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -60,19 +95,25 @@ class HealthCardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDigitalCard(BuildContext context) {
+  Widget _buildDigitalCard(BuildContext context, DoctorMitraStore store) {
+    final user = store.currentUser;
+    final card = store.currentHealthCard;
+    final cardId = card != null && card.id.length >= 8
+        ? 'DM-HC-${card.id.substring(0, 8).toUpperCase()}'
+        : 'DM-HC- राकेश९८';
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.secondary],
+          colors: [AppColors.primary, AppColors.accent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20), // rounded 20px
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1A000000),
+            color: Color(0x24000000), // subtle shadow
             blurRadius: 16,
             offset: Offset(0, 4),
           ),
@@ -101,7 +142,7 @@ class HealthCardScreen extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2,
                         fontSize: 14,
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Nunito',
                       ),
                     ),
                     Container(
@@ -124,23 +165,23 @@ class HealthCardScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Rajeev Kumar',
-                            style: TextStyle(
+                          Text(
+                            user?.name ?? 'Rakesh Kumar',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
-                              fontFamily: 'Poppins',
+                              fontFamily: 'Nunito',
                             ),
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'ID: DM-HC-98765432',
+                            'ID: $cardId',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.white.withOpacity(0.85),
                               fontSize: 12,
                               letterSpacing: 1.0,
-                              fontFamily: 'Poppins',
+                              fontFamily: 'Nunito',
                             ),
                           ),
                         ],
@@ -160,7 +201,7 @@ class HealthCardScreen extends StatelessWidget {
                         ],
                       ),
                       child: const Icon(Icons.qr_code_2,
-                          size: 38, color: AppColors.textDark),
+                          size: 38, color: AppColors.primary),
                     ),
                   ],
                 ),
@@ -175,17 +216,17 @@ class HealthCardScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildCardItem('BLOOD', 'O+'),
+                      _buildCardItem('BLOOD', card?.bloodGroup ?? 'O+'),
                       Container(
                           width: 1,
                           height: 28,
                           color: Colors.white.withOpacity(0.2)),
-                      _buildCardItem('AGE', '32 Yrs'),
+                      _buildCardItem('DISTRICT', user?.district ?? 'Patna'),
                       Container(
                           width: 1,
                           height: 28,
                           color: Colors.white.withOpacity(0.2)),
-                      _buildCardItem('GENDER', 'Male'),
+                      _buildCardItem('EMERGENCY', card?.emergencyContact ?? user?.mobile ?? '102'),
                     ],
                   ),
                 ),
@@ -204,11 +245,11 @@ class HealthCardScreen extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withOpacity(0.75),
             fontSize: 10,
             letterSpacing: 0.5,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.w600,
           ),
         ),
         const SizedBox(height: 2),
@@ -216,9 +257,9 @@ class HealthCardScreen extends StatelessWidget {
           value,
           style: const TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+            fontFamily: 'Nunito',
           ),
         ),
       ],
@@ -235,13 +276,8 @@ class HealthCardScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 12,
-            offset: Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppColors.premiumShadow,
+        border: Border.all(color: Colors.black.withOpacity(0.01)),
       ),
       child: Row(
         children: [
@@ -261,10 +297,10 @@ class HealthCardScreen extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     fontSize: 15,
                     color: AppColors.textDark,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'Nunito',
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -273,7 +309,7 @@ class HealthCardScreen extends StatelessWidget {
                   style: const TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 13,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'Nunito',
                   ),
                 ),
               ],

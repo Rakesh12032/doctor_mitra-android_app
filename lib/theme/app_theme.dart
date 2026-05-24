@@ -4,12 +4,12 @@ import 'app_colors.dart';
 
 class AppTheme {
   static const Color primaryColor = AppColors.primary;
-  static const Color secondaryColor = AppColors.secondary;
+  static const Color accentColor = AppColors.accent;
 
   static ThemeData getTheme(bool isHindi) {
     final TextTheme baseTextTheme = isHindi
         ? GoogleFonts.notoSansDevanagariTextTheme()
-        : GoogleFonts.poppinsTextTheme();
+        : GoogleFonts.nunitoTextTheme();
 
     return ThemeData(
       useMaterial3: true,
@@ -17,7 +17,7 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
-        secondary: AppColors.secondary,
+        secondary: AppColors.accent,
         error: AppColors.error,
         surface: AppColors.cardBg,
       ),
@@ -101,7 +101,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16), // Card border radius 16px
-          side: BorderSide(color: Colors.black.withOpacity(0.02), width: 1),
+          side: BorderSide(color: Colors.black.withOpacity(0.015), width: 1),
         ),
         margin: EdgeInsets.zero,
         shadowColor: Colors.black.withOpacity(0.08),
@@ -161,3 +161,4 @@ class AppTheme {
     );
   }
 }
+

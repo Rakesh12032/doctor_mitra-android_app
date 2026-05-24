@@ -22,7 +22,10 @@ class BookingsScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: AppColors.cardBg,
           elevation: 0,
-          title: Text(lang.t('my_bookings')),
+          title: Text(
+            lang.t('my_bookings'),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20, fontFamily: 'Nunito'),
+          ),
           actions: const [
             Padding(
                 padding: EdgeInsets.only(right: 8.0), child: LanguageToggle())
@@ -30,8 +33,8 @@ class BookingsScreen extends StatelessWidget {
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48),
             child: Container(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: AppColors.border)),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: AppColors.border.withOpacity(0.5))),
               ),
               child: TabBar(
                 labelColor: AppColors.primary,
@@ -39,9 +42,9 @@ class BookingsScreen extends StatelessWidget {
                 indicatorColor: AppColors.primary,
                 indicatorWeight: 3,
                 labelStyle:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, fontFamily: 'Nunito'),
                 unselectedLabelStyle:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, fontFamily: 'Nunito'),
                 tabs: [
                   Tab(text: lang.t('upcoming')),
                   Tab(text: lang.t('past')),
@@ -92,13 +95,8 @@ class BookingsScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.cardBg,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 12,
-                offset: Offset(0, 2),
-              )
-            ],
+            boxShadow: AppColors.premiumShadow,
+            border: Border.all(color: Colors.black.withOpacity(0.015)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -112,7 +110,7 @@ class BookingsScreen extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: const BoxDecoration(
-                        color: AppColors.lightBackground,
+                        color: AppColors.primaryLight,
                         shape: BoxShape.circle,
                       ),
                       child: const Center(
@@ -136,9 +134,9 @@ class BookingsScreen extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w700,
                                     color: AppColors.textDark,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Nunito',
                                   ),
                                 ),
                               ),
@@ -150,9 +148,9 @@ class BookingsScreen extends StatelessWidget {
                             specialty,
                             style: const TextStyle(
                               color: AppColors.primary,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              fontFamily: 'Poppins',
+                              fontFamily: 'Nunito',
                             ),
                           ),
                         ],
@@ -180,7 +178,7 @@ class BookingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (booking.status == 'upcoming') ...[
+                if (booking.status == 'upcoming' || booking.status == 'pending') ...[
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
@@ -194,7 +192,7 @@ class BookingsScreen extends StatelessWidget {
                         foregroundColor: AppColors.error,
                         side: const BorderSide(
                             color: AppColors.error, width: 1.2),
-                        minimumSize: const Size(0, 42),
+                        minimumSize: const Size(0, 46),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
@@ -202,8 +200,8 @@ class BookingsScreen extends StatelessWidget {
                         lang.t('cancel'),
                         style: const TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Nunito',
                         ),
                       ),
                     ),
@@ -243,7 +241,7 @@ class BookingsScreen extends StatelessWidget {
         break;
       default:
         color = AppColors.textMuted;
-        bgColor = AppColors.lightBackground;
+        bgColor = AppColors.primaryLight;
     }
 
     final label = lang.t(status);
@@ -252,15 +250,15 @@ class BookingsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20), // pill shape
       ),
       child: Text(
         label,
         style: TextStyle(
           color: color,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           fontSize: 11,
-          fontFamily: 'Poppins',
+          fontFamily: 'Nunito',
         ),
       ),
     );
@@ -277,7 +275,7 @@ class BookingsScreen extends StatelessWidget {
           style: const TextStyle(
             color: AppColors.textMuted,
             fontSize: 13,
-            fontFamily: 'Poppins',
+            fontFamily: 'Nunito',
           ),
         ),
         const SizedBox(width: 8),
@@ -286,10 +284,10 @@ class BookingsScreen extends StatelessWidget {
             value,
             textAlign: TextAlign.right,
             style: const TextStyle(
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: AppColors.textDark,
               fontSize: 13,
-              fontFamily: 'Poppins',
+              fontFamily: 'Nunito',
             ),
             overflow: TextOverflow.ellipsis,
           ),

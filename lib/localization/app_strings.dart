@@ -70,6 +70,8 @@ class AppStrings {
       'no_bookings': 'No bookings found',
       'cancel': 'Cancel',
       'data_safe': 'Your data is safe. We never share it.',
+      'teleconsult': 'Video Consultation',
+      'device_diagnostics': 'Pre-Call Diagnostics',
     },
     'hi': {
       'app_name': 'डॉक्टर मित्र',
@@ -141,6 +143,8 @@ class AppStrings {
       'no_bookings': 'कोई बुकिंग नहीं मिली',
       'cancel': 'रद्द करें',
       'data_safe': 'आपका डेटा सुरक्षित है। हम इसे कभी साझा नहीं करते।',
+      'teleconsult': 'वीडियो परामर्श',
+      'device_diagnostics': 'प्री-कॉल डायग्नोस्टिक्स',
     }
   };
 }

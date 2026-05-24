@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/language_provider.dart';
+import '../providers/store_provider.dart';
 import '../theme/app_colors.dart';
+import 'onboarding_screen.dart';
 import 'login_screen.dart';
+import 'dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,13 +39,22 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () async {
+      if (!mounted) return;
+      final store = Provider.of<DoctorMitraStore>(context, listen: false);
+      final hasSession = store.currentUser != null;
+      
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const LoginScreen(),
+              !onboardingCompleted
+                  ? const OnboardingScreen()
+                  : (hasSession ? const DashboardScreen() : const LoginScreen()),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
           },
